@@ -3,7 +3,6 @@ module github.com/wirnat/aksara-cli
 go 1.17
 
 require (
-	github.com/jinzhu/inflection v1.0.0
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/spf13/cobra v1.4.0
 )
