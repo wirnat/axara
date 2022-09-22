@@ -5,7 +5,7 @@ import (
 	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_repository"
 	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_request"
 	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_usecase"
-	"gitlab.com/wirawirw/aksara-cli/util/query_reader"
+	"github.com/wirnat/aksara-cli/util/query_reader"
 )
 
 type {{.ModelName}}Rest struct {

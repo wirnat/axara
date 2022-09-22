@@ -4,7 +4,7 @@ Copyright © 2022 WIRA <wirajus@gmail.com>
 package main
 
 import (
-	"gitlab.com/wirawirw/aksara-cli/cmd"
+	"github.com/wirnat/aksara-cli/cmd"
 )
 
 func main() {

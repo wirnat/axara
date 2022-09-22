@@ -2,9 +2,9 @@ package company_usecase_v1
 
 import (
 	"context"
-	"gitlab.com/wirawirw/aksara-cli/example/model"
-	"gitlab.com/wirawirw/aksara-cli/modules/company/company_repository"
-	"gitlab.com/wirawirw/aksara-cli/modules/company/company_request"
+	"github.com/wirnat/aksara-cli/example/model"
+	"github.com/wirnat/aksara-cli/modules/company/company_repository"
+	"github.com/wirnat/aksara-cli/modules/company/company_request"
 )
 
 type companyUsecase struct {

@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"gitlab.com/wirawirw/aksara-cli/util/stringtor"
+	"github.com/wirnat/aksara-cli/util/stringtor"
 	"io"
 	"io/ioutil"
 	"os"

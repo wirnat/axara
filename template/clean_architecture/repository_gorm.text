@@ -3,8 +3,8 @@ package {{.Meta.service}}_gorm
 import (
 	"context"
 	"fmt"
-	"gitlab.com/wirawirw/aksara-cli/example/model"
-	"gitlab.com/wirawirw/aksara-cli/modules/{{.Meta.service}}/{{.Meta.service}}_request"
+	"github.com/wirnat/aksara-cli/example/model"
+	"github.com/wirnat/aksara-cli/modules/{{.Meta.service}}/{{.Meta.service}}_request"
 	"gorm.io/gorm"
 )
 

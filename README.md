@@ -68,7 +68,7 @@ Make your life easier, this CLI will autogenerate code base on choosed clean arc
 Install using go module in your project
 
 ```bash
-  go get -d gitlab.com/wirawirw/aksara-cli@latest
+  go get -d github.com/wirnat/aksara-cli@latest
 ```
 
 ## Usage/Examples

@@ -2,7 +2,7 @@
   "key": "ᬅᬓ᭄ᬱᬭ",
   "model_path": "example/model",
   "result_path": "modules",
-  "module_name": "gitlab.com/wirawirw/aksara-cli",
+  "module_name": "github.com/wirnat/aksara-cli",
   "module_traits": [
     {
       "name": "~service~ repository interfaces",

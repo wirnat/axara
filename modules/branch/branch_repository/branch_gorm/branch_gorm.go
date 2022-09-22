@@ -3,8 +3,8 @@ package branch_gorm
 import (
 	"context"
 	"fmt"
-	"gitlab.com/wirawirw/aksara-cli/example/model"
-	"gitlab.com/wirawirw/aksara-cli/modules/branch/branch_request"
+	"github.com/wirnat/aksara-cli/example/model"
+	"github.com/wirnat/aksara-cli/modules/branch/branch_request"
 	"gorm.io/gorm"
 )
 

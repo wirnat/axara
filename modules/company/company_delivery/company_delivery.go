@@ -2,10 +2,10 @@ package company_rest
 
 import (
 	"github.com/labstack/echo/v4"
-	"gitlab.com/wirawirw/aksara-cli/modules/company/company_repository"
-	"gitlab.com/wirawirw/aksara-cli/modules/company/company_request"
-	"gitlab.com/wirawirw/aksara-cli/modules/company/company_usecase"
-	"gitlab.com/wirawirw/aksara-cli/util/query_reader"
+	"github.com/wirnat/aksara-cli/modules/company/company_repository"
+	"github.com/wirnat/aksara-cli/modules/company/company_request"
+	"github.com/wirnat/aksara-cli/modules/company/company_usecase"
+	"github.com/wirnat/aksara-cli/util/query_reader"
 )
 
 type CompanyRest struct {
