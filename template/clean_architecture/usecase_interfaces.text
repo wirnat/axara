@@ -1,0 +1,12 @@
+package {{.Meta.service}}_usecase
+
+import (
+    "{{.ModuleName}}/{{.ModelPath}}"
+    "context"
+    "{{.ModuleName}}/{{.ResultPath}}/{{.Meta.service}}/{{.Meta.service}}_request"
+)
+
+type {{.ModelName}}Usecase interface {
+	Store(ctx context.Context, req {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error)
+	Update(ctx context.Context, req {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error)
+}

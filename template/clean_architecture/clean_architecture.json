@@ -1,0 +1,80 @@
+{
+  "key": "ᬅᬓ᭄ᬱᬭ",
+  "model_path": "example/model",
+  "result_path": "modules",
+  "module_name": "gitlab.com/wirawirw/aksara-cli",
+  "module_traits": [
+    {
+      "name": "~service~ repository interfaces",
+      "dir": "~result_path~/~service~/~service~_repository",
+      "template": "template/clean_architecture/repository_interfaces.text",
+      "file_name": "~service~.go",
+      "meta": {
+        "import_request": "~module_name~/~result_path~/~service~/~service~_request"
+      }
+    },
+    {
+      "name": "~service~ fetch param",
+      "dir": "~result_path~/~service~/~service~_request",
+      "template": "template/clean_architecture/request_param.text",
+      "file_name": "~service~_request.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ store param",
+      "dir": "~result_path~/~service~/~service~_request",
+      "template": "template/clean_architecture/store_param.text",
+      "file_name": "~service~_store.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ update param",
+      "dir": "~result_path~/~service~/~service~_request",
+      "template": "template/clean_architecture/update_param.text",
+      "file_name": "~service~_update.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ usecase interfaces",
+      "dir": "~result_path~/~service~/~service~_usecase",
+      "template": "template/clean_architecture/usecase_interfaces.text",
+      "file_name": "~service~_usecase.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ usecase",
+      "dir": "~result_path~/~service~/~service~_usecase/~service~_usecase_v1",
+      "template": "template/clean_architecture/usecase.text",
+      "file_name": "~service~_usecase.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ repository",
+      "dir": "~result_path~/~service~/~service~_repository/~service~_gorm",
+      "template": "template/clean_architecture/repository_gorm.text",
+      "file_name": "~service~_gorm.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ transaction",
+      "dir": "~result_path~/~service~/~service~_repository/~service~_gorm",
+      "template": "template/clean_architecture/transaction_gorm.text",
+      "file_name": "~service~_trx.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ filter",
+      "dir": "~result_path~/~service~/~service~_repository/~service~_gorm",
+      "template": "template/clean_architecture/filter_gorm.text",
+      "file_name": "~service~_filter.go",
+      "meta": {}
+    },
+    {
+      "name": "~service~ delivery",
+      "dir": "~result_path~/~service~/~service~_delivery",
+      "template": "template/clean_architecture/delivery.text",
+      "file_name": "~service~_delivery.go",
+      "meta": {}
+    }
+  ]
+}

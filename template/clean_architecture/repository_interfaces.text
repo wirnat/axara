@@ -1,0 +1,35 @@
+package {{.ModelNameSnake}}_repository
+
+import (
+	"context"
+	"{{.ModuleName}}/{{.ModelPath}}"
+	"{{.Meta.import_request}}"
+)
+
+type {{.ModelName}} interface {
+	{{.ModelName}}Fetch
+	{{.ModelName}}Get
+	{{.ModelName}}Store
+	{{.ModelName}}Update
+	{{.ModelName}}Delete
+}
+
+type {{.ModelName}}Fetch interface {
+	Fetch(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Param) ([]model.{{.ModelName}}, error)
+}
+
+type {{.ModelName}}Get interface {
+	Get(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Param) (model.{{.ModelName}}, error)
+}
+
+type {{.ModelName}}Store interface {
+	Store(ctx context.Context, {{.ModelName}} *model.{{.ModelName}}) error
+}
+
+type {{.ModelName}}Update interface {
+	Update(ctx context.Context, {{.ModelName}} *model.{{.ModelName}}, condition ...{{.ModelNameSnake}}_request.{{.ModelName}}Param) error
+}
+
+type {{.ModelName}}Delete interface {
+	Delete(ctx context.Context, uuid string) error
+}

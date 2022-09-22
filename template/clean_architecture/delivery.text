@@ -1,0 +1,63 @@
+package {{.Meta.service}}_rest
+
+import (
+	"github.com/labstack/echo/v4"
+	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_repository"
+	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_request"
+	"{{.ModuleName}}/modules/{{.Meta.service}}/{{.Meta.service}}_usecase"
+	"gitlab.com/wirawirw/aksara-cli/util/query_reader"
+)
+
+type {{.ModelName}}Rest struct {
+	{{.ModelName}}Interactor {{.Meta.service}}_usecase.{{.ModelName}}Usecase
+	{{.ModelName}}FetchRepo  {{.Meta.service}}_repository.{{.ModelName}}Fetch
+	{{.ModelName}}GetRepo    {{.Meta.service}}_repository.{{.ModelName}}Get
+	{{.ModelName}}DeleteRepo {{.Meta.service}}_repository.{{.ModelName}}Delete
+}
+
+func (r {{.ModelName}}Rest) Show(ctx echo.Context) error {
+	param := {{.Meta.service}}_request.{{.ModelName}}Param{}
+	_uuid := ctx.Param("uuid")
+	param.UUID = &_uuid
+
+	res, err := r.{{.ModelName}}GetRepo.Get(ctx.Request().Context(), param)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(200, res)
+}
+
+func (r {{.ModelName}}Rest) Find(ctx echo.Context) error {
+	param := {{.Meta.service}}_request.{{.ModelName}}Param{}
+	err := query_reader.Bind(ctx, &param)
+	if err != nil {
+		return err
+	}
+
+	res, err := r.{{.ModelName}}FetchRepo.Fetch(ctx.Request().Context(), param)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(200, res)
+}
+
+func (r {{.ModelName}}Rest) Store(ctx echo.Context) error {
+	param := new({{.Meta.service}}_request.{{.ModelName}}Store)
+	err := ctx.Bind(param)
+	if err != nil {
+		return err
+	}
+
+	err = ctx.Validate(param)
+	if err != nil {
+		return err
+	}
+
+	res, err := r.{{.ModelName}}Interactor.Store(ctx.Request().Context(), *param)
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(200, res)
+}

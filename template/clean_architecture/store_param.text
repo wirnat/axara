@@ -1,0 +1,7 @@
+package {{.ModelNameSnake}}_request
+
+type {{.ModelName}}Store struct {
+	{{- range $m:=.ModelFields }}
+    {{$m.Name }} {{if $m.IsPtr}}*{{$m.Type }}{{else}}{{$m.Type }}{{end}} `json:"{{$m.Json -}}" {{if eq $m.Meta.validate_store "true"}}validate:"required"{{end}}`
+    {{- end}}
+}

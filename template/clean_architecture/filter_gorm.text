@@ -1,0 +1,14 @@
+package {{.Meta.service}}_gorm
+
+import (
+	"{{.ModuleName}}/{{.ResultPath}}/{{.Meta.service}}/{{.Meta.service}}_request"
+	"gorm.io/gorm"
+)
+
+func filter(db *gorm.DB, param {{.Meta.service}}_request.{{.ModelName}}Param) {
+	{{- range $m:=.ModelFields }}
+	if param.{{$m.Name}} != nil {
+    db = db.Where("{{$m.Name}}", *param.{{$m.Name -}})
+    }
+    {{- end}}
+}

@@ -1,0 +1,7 @@
+package {{.ModelNameSnake}}_request
+
+type {{.ModelName}}Param struct {
+	{{- range $m:=.ModelFields }}
+    {{$m.Name }} *{{$m.Type }} `json:"{{$m.Json -}}"`
+    {{- end}}
+}

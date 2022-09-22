@@ -1,0 +1,8 @@
+package {{.ModelNameSnake}}_request
+
+type {{.ModelName}}Update struct {
+    UUID string `json:"uuid" validate:"required"`
+	{{- range $m:=.ModelFields }}
+    {{$m.Name }} *{{$m.Type }} `json:"{{$m.Json -}}"`
+    {{- end}}
+}
