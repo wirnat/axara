@@ -4,6 +4,7 @@ Copyright © 2022
 package cmd
 
 import (
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -41,6 +42,17 @@ var generatorCmd = &cobra.Command{
 	},
 }
 
+const VERSION = "v0.0.1"
+
+var checkVersion = &cobra.Command{
+	Use:   "version",
+	Short: "Check CLI Version",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Aksara CLI version " + VERSION)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(generatorCmd)
+	rootCmd.AddCommand(checkVersion)
 }

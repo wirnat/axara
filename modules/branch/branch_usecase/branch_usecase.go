@@ -1,9 +1,9 @@
 package branch_usecase
 
 import (
-	"github.com/wirnat/aksara-cli/example/model"
-	"context"
-	"github.com/wirnat/aksara-cli/modules/branch/branch_request"
+    "github.com/wirnat/aksara-cli/example/model"
+    "context"
+    "github.com/wirnat/aksara-cli/modules/branch/branch_request"
 )
 
 type BranchUsecase interface {

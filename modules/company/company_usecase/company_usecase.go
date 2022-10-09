@@ -1,9 +1,9 @@
 package company_usecase
 
 import (
-	"github.com/wirnat/aksara-cli/example/model"
-	"context"
-	"github.com/wirnat/aksara-cli/modules/company/company_request"
+    "github.com/wirnat/aksara-cli/example/model"
+    "context"
+    "github.com/wirnat/aksara-cli/modules/company/company_request"
 )
 
 type CompanyUsecase interface {

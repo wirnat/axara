@@ -2,9 +2,9 @@ package {{.Meta.service}}_usecase_v1
 
 import (
 	"context"
-	"github.com/wirnat/aksara-cli/example/model"
-	"github.com/wirnat/aksara-cli/modules/{{.Meta.service}}/{{.Meta.service}}_repository"
-	"github.com/wirnat/aksara-cli/modules/{{.Meta.service}}/{{.Meta.service}}_request"
+	"{{.ModuleName}}/example/model"
+	"{{.ModuleName}}/{{.Meta.service}}/{{.Meta.service}}_repository"
+	"{{.ModuleName}}/{{.Meta.service}}/{{.Meta.service}}_request"
 )
 
 type {{.Meta.service}}Usecase struct {
