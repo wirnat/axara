@@ -12,7 +12,7 @@ import (
 
 type ModelTrait struct {
 	ModelFields    []ModelField `json:"model_fields"`
-	ModelName      string       `json:"model_name"`
+	Model          string       `json:"model"`
 	ModelNameSnake string       `json:"model_name_snake"`
 }
 
@@ -91,7 +91,7 @@ func (r *ModelTrait) getEmbeddedModelField(modelName string, config Config) erro
 
 func NewModelTraitFromFile(fl io.Reader, modelName string, config Config) *ModelTrait {
 	m := &ModelTrait{
-		ModelName:      modelName,
+		Model:          modelName,
 		ModelNameSnake: stringtor.ToSnakeCase(modelName),
 	}
 

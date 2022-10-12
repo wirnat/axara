@@ -1,0 +1,29 @@
+package {{.Meta.package_repo}}
+
+import (
+	"context"
+	"{{.ModuleName}}/{{.ModelPath}}"
+)
+
+type {{.Model}}Repository interface {
+	{{.Model}}RepositoryStore
+	{{.Model}}RepositoryUpdate
+	{{.Model}}RepositoryGet
+	{{.Model}}RepositoryFetch
+}
+
+type {{.Model}}RepositoryStore interface {
+	Store(ctx context.Context, branch *model.{{.Model}}) error
+}
+
+type {{.Model}}RepositoryUpdate interface {
+	Update(ctx context.Context, branch *model.{{.Model}}) error
+}
+
+type {{.Model}}RepositoryGet interface {
+	Get(ctx context.Context, uuid string) (model.{{.Model}}, error)
+}
+
+type {{.Model}}RepositoryFetch interface {
+	Fetch(ctx context.Context) ([]model.{{.Model}}, error)
+}

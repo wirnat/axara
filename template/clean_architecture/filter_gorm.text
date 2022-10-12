@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func filter(db *gorm.DB, param {{.Meta.service}}_request.{{.ModelName}}Param) {
+func filter(db *gorm.DB, param {{.Meta.service}}_request.{{.Model}}Param) {
 	{{- range $m:=.ModelFields }}
 	if param.{{$m.Name}} != nil {
     db = db.Where("{{$m.Name}}", *param.{{$m.Name -}})

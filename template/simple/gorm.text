@@ -1,0 +1,33 @@
+package {{.Meta.package_gorm}}
+
+import (
+	"context"
+	"{{.ModuleName}}/{{.ModelPath}}"
+	"gorm.io/gorm"
+)
+
+type {{.Meta.service}}Gorm struct {
+	db gorm.DB
+}
+
+func New{{.Model}}Gorm(db gorm.DB) *{{.Meta.service}}Gorm {
+	return &{{.Meta.service}}Gorm{db: db}
+}
+
+func (b {{.Meta.service}}Gorm) Store(ctx context.Context, {{.Meta.service}} *model.{{.Model}}) error {
+	return b.db.Create({{.Meta.service}}).Error
+}
+
+func (b {{.Meta.service}}Gorm) Update(ctx context.Context, {{.Meta.service}} *model.{{.Model}}) error {
+	return b.db.Updates({{.Meta.service}}).Error
+}
+
+func (b {{.Meta.service}}Gorm) Get(ctx context.Context, uuid string) (r model.{{.Model}}, err error) {
+	err = b.db.Where("uuid=?", uuid).First(&r).Error
+	return
+}
+
+func (b {{.Meta.service}}Gorm) Fetch(ctx context.Context) (r []model.{{.Model}}, err error) {
+	err = b.db.First(&r).Error
+	return
+}

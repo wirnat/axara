@@ -8,16 +8,16 @@ import (
 )
 
 type {{.Meta.service}}Usecase struct {
-	{{.Meta.service}}Store  {{.Meta.service}}_repository.{{.ModelName}}Store
-	{{.Meta.service}}Update {{.Meta.service}}_repository.{{.ModelName}}Update}
+	{{.Meta.service}}Store  {{.Meta.service}}_repository.{{.Model}}Store
+	{{.Meta.service}}Update {{.Meta.service}}_repository.{{.Model}}Update}
 
-func New{{.ModelName}}Usecase({{.Meta.service}}Store {{.Meta.service}}_repository.{{.ModelName}}Store, {{.Meta.service}}Update {{.Meta.service}}_repository.{{.ModelName}}Update) *{{.Meta.service}}Usecase {
+func New{{.Model}}Usecase({{.Meta.service}}Store {{.Meta.service}}_repository.{{.Model}}Store, {{.Meta.service}}Update {{.Meta.service}}_repository.{{.Model}}Update) *{{.Meta.service}}Usecase {
 	return &{{.Meta.service}}Usecase{
 	{{- .Meta.service}}Store: {{.Meta.service}}Store,
 	{{- .Meta.service}}Update: {{.Meta.service}}Update}
 }
 
-func (u {{.Meta.service}}Usecase) Store(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error) {
+func (u {{.Meta.service}}Usecase) Store(ctx context.Context, param {{.Meta.service}}_request.{{.Model}}Store) (r model.{{.Model}}, err error) {
 	{{- range $m:=.ModelFields }}
      r.{{$m.Name}} = param.{{$m.Name}}
     {{- end}}
@@ -26,7 +26,7 @@ func (u {{.Meta.service}}Usecase) Store(ctx context.Context, param {{.Meta.servi
 	return
 }
 
-func (u {{.Meta.service}}Usecase) Update(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error) {
+func (u {{.Meta.service}}Usecase) Update(ctx context.Context, param {{.Meta.service}}_request.{{.Model}}Store) (r model.{{.Model}}, err error) {
 	{{- range $m:=.ModelFields }}
      r.{{$m.Name}} = param.{{$m.Name}}
     {{- end}}

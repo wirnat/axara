@@ -1,4 +1,4 @@
-package branch_repository
+package simple
 
 import (
 	"context"

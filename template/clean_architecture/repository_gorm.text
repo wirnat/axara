@@ -16,19 +16,19 @@ func New(db gorm.DB) *{{.Meta.service}}Gorm {
 	return &{{.Meta.service}}Gorm{db: db}
 }
 
-func (c {{.Meta.service}}Gorm) Fetch(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Param) (res []model.{{.ModelName}}, err error) {
+func (c {{.Meta.service}}Gorm) Fetch(ctx context.Context, param {{.Meta.service}}_request.{{.Model}}Param) (res []model.{{.Model}}, err error) {
 	filter(&c.db, param)
 	err = c.db.Find(&res).Error
 	return
 }
 
-func (c {{.Meta.service}}Gorm) Get(ctx context.Context, param {{.Meta.service}}_request.{{.ModelName}}Param) (res model.{{.ModelName}}, err error) {
+func (c {{.Meta.service}}Gorm) Get(ctx context.Context, param {{.Meta.service}}_request.{{.Model}}Param) (res model.{{.Model}}, err error) {
 	filter(&c.db, param)
 	err = c.db.First(&res).Error
 	return
 }
 
-func (c {{.Meta.service}}Gorm) Store(ctx context.Context, {{.Meta.service}} *model.{{.ModelName}}) error {
+func (c {{.Meta.service}}Gorm) Store(ctx context.Context, {{.Meta.service}} *model.{{.Model}}) error {
 	db, err := getTx(ctx)
 	if err == nil {
 		c.db = *db
@@ -37,7 +37,7 @@ func (c {{.Meta.service}}Gorm) Store(ctx context.Context, {{.Meta.service}} *mod
 	return db.Create(&{{.Meta.service}}).Error
 }
 
-func (c {{.Meta.service}}Gorm) Update(ctx context.Context, {{.Meta.service}} *model.{{.ModelName}}, condition ...{{.Meta.service}}_request.{{.ModelName}}Param) error {
+func (c {{.Meta.service}}Gorm) Update(ctx context.Context, {{.Meta.service}} *model.{{.Model}}, condition ...{{.Meta.service}}_request.{{.Model}}Param) error {
 	db, err := getTx(ctx)
 	if err == nil {
 		c.db = *db
@@ -52,5 +52,5 @@ func (c {{.Meta.service}}Gorm) Delete(ctx context.Context, uuid string) error {
 		c.db = *db
 	}
 
-	return db.Delete(model.{{.ModelName}}{}, fmt.Sprintf("uuid=%v", uuid)).Error
+	return db.Delete(model.{{.Model}}{}, fmt.Sprintf("uuid=%v", uuid)).Error
 }

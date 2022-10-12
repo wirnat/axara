@@ -2,9 +2,7 @@ package company_gorm
 
 import (
 	"context"
-	"fmt"
 	"github.com/wirnat/aksara-cli/example/model"
-	"github.com/wirnat/aksara-cli/modules/company/company_request"
 	"gorm.io/gorm"
 )
 
@@ -12,45 +10,24 @@ type companyGorm struct {
 	db gorm.DB
 }
 
-func New(db gorm.DB) *companyGorm {
+func NewCompanyGorm(db gorm.DB) *companyGorm {
 	return &companyGorm{db: db}
 }
 
-func (c companyGorm) Fetch(ctx context.Context, param company_request.CompanyParam) (res []model.Company, err error) {
-	filter(&c.db, param)
-	err = c.db.Find(&res).Error
+func (b companyGorm) Store(ctx context.Context, company *model.Company) error {
+	return b.db.Create(company).Error
+}
+
+func (b companyGorm) Update(ctx context.Context, company *model.Company) error {
+	return b.db.Updates(company).Error
+}
+
+func (b companyGorm) Get(ctx context.Context, uuid string) (r model.Company, err error) {
+	err = b.db.Where("uuid=?", uuid).First(&r).Error
 	return
 }
 
-func (c companyGorm) Get(ctx context.Context, param company_request.CompanyParam) (res model.Company, err error) {
-	filter(&c.db, param)
-	err = c.db.First(&res).Error
+func (b companyGorm) Fetch(ctx context.Context) (r []model.Company, err error) {
+	err = b.db.First(&r).Error
 	return
-}
-
-func (c companyGorm) Store(ctx context.Context, company *model.Company) error {
-	db, err := getTx(ctx)
-	if err == nil {
-		c.db = *db
-	}
-
-	return db.Create(&company).Error
-}
-
-func (c companyGorm) Update(ctx context.Context, company *model.Company, condition ...company_request.CompanyParam) error {
-	db, err := getTx(ctx)
-	if err == nil {
-		c.db = *db
-	}
-
-	return db.Updates(&company).Error
-}
-
-func (c companyGorm) Delete(ctx context.Context, uuid string) error {
-	db, err := getTx(ctx)
-	if err == nil {
-		c.db = *db
-	}
-
-	return db.Delete(model.Company{}, fmt.Sprintf("uuid=%v", uuid)).Error
 }

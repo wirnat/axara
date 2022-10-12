@@ -6,7 +6,7 @@ import (
     "{{.ModuleName}}/{{.ResultPath}}/{{.Meta.service}}/{{.Meta.service}}_request"
 )
 
-type {{.ModelName}}Usecase interface {
-	Store(ctx context.Context, req {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error)
-	Update(ctx context.Context, req {{.Meta.service}}_request.{{.ModelName}}Store) (r model.{{.ModelName}}, err error)
+type {{.Model}}Usecase interface {
+	Store(ctx context.Context, req {{.Meta.service}}_request.{{.Model}}Store) (r model.{{.Model}}, err error)
+	Update(ctx context.Context, req {{.Meta.service}}_request.{{.Model}}Store) (r model.{{.Model}}, err error)
 }

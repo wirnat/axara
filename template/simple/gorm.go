@@ -1,4 +1,4 @@
-package branch_gorm
+package simple
 
 import (
 	"context"

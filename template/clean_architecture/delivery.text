@@ -8,19 +8,19 @@ import (
 	"github.com/wirnat/aksara-cli/util/query_reader"
 )
 
-type {{.ModelName}}Rest struct {
-	{{.ModelName}}Interactor {{.Meta.service}}_usecase.{{.ModelName}}Usecase
-	{{.ModelName}}FetchRepo  {{.Meta.service}}_repository.{{.ModelName}}Fetch
-	{{.ModelName}}GetRepo    {{.Meta.service}}_repository.{{.ModelName}}Get
-	{{.ModelName}}DeleteRepo {{.Meta.service}}_repository.{{.ModelName}}Delete
+type {{.Model}}Rest struct {
+	{{.Model}}Interactor {{.Meta.service}}_usecase.{{.Model}}Usecase
+	{{.Model}}FetchRepo  {{.Meta.service}}_repository.{{.Model}}Fetch
+	{{.Model}}GetRepo    {{.Meta.service}}_repository.{{.Model}}Get
+	{{.Model}}DeleteRepo {{.Meta.service}}_repository.{{.Model}}Delete
 }
 
-func (r {{.ModelName}}Rest) Show(ctx echo.Context) error {
-	param := {{.Meta.service}}_request.{{.ModelName}}Param{}
+func (r {{.Model}}Rest) Show(ctx echo.Context) error {
+	param := {{.Meta.service}}_request.{{.Model}}Param{}
 	_uuid := ctx.Param("uuid")
 	param.UUID = &_uuid
 
-	res, err := r.{{.ModelName}}GetRepo.Get(ctx.Request().Context(), param)
+	res, err := r.{{.Model}}GetRepo.Get(ctx.Request().Context(), param)
 	if err != nil {
 		return err
 	}
@@ -28,14 +28,14 @@ func (r {{.ModelName}}Rest) Show(ctx echo.Context) error {
 	return ctx.JSON(200, res)
 }
 
-func (r {{.ModelName}}Rest) Find(ctx echo.Context) error {
-	param := {{.Meta.service}}_request.{{.ModelName}}Param{}
+func (r {{.Model}}Rest) Find(ctx echo.Context) error {
+	param := {{.Meta.service}}_request.{{.Model}}Param{}
 	err := query_reader.Bind(ctx, &param)
 	if err != nil {
 		return err
 	}
 
-	res, err := r.{{.ModelName}}FetchRepo.Fetch(ctx.Request().Context(), param)
+	res, err := r.{{.Model}}FetchRepo.Fetch(ctx.Request().Context(), param)
 	if err != nil {
 		return err
 	}
@@ -43,8 +43,8 @@ func (r {{.ModelName}}Rest) Find(ctx echo.Context) error {
 	return ctx.JSON(200, res)
 }
 
-func (r {{.ModelName}}Rest) Store(ctx echo.Context) error {
-	param := new({{.Meta.service}}_request.{{.ModelName}}Store)
+func (r {{.Model}}Rest) Store(ctx echo.Context) error {
+	param := new({{.Meta.service}}_request.{{.Model}}Store)
 	err := ctx.Bind(param)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func (r {{.ModelName}}Rest) Store(ctx echo.Context) error {
 		return err
 	}
 
-	res, err := r.{{.ModelName}}Interactor.Store(ctx.Request().Context(), *param)
+	res, err := r.{{.Model}}Interactor.Store(ctx.Request().Context(), *param)
 	if err != nil {
 		return err
 	}

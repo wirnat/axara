@@ -54,27 +54,6 @@
       "template": "template/clean_architecture/repository_gorm.text",
       "file_name": "~service~_gorm.go",
       "meta": {}
-    },
-    {
-      "name": "~service~ transaction",
-      "dir": "~result_path~/~service~/~service~_repository/~service~_gorm",
-      "template": "template/clean_architecture/transaction_gorm.text",
-      "file_name": "~service~_trx.go",
-      "meta": {}
-    },
-    {
-      "name": "~service~ filter",
-      "dir": "~result_path~/~service~/~service~_repository/~service~_gorm",
-      "template": "template/clean_architecture/filter_gorm.text",
-      "file_name": "~service~_filter.go",
-      "meta": {}
-    },
-    {
-      "name": "~service~ delivery",
-      "dir": "~result_path~/~service~/~service~_delivery",
-      "template": "template/clean_architecture/delivery.text",
-      "file_name": "~service~_delivery.go",
-      "meta": {}
     }
   ]
 }
