@@ -1,4 +1,4 @@
-package simple
+package simple_repository
 
 import (
 	"context"
