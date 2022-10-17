@@ -29,4 +29,7 @@ Make your life easier, this CLI will autogenerate code and architecture base on 
 - Various template has availabled, such as Clean Architecture, Monorepo Clean Architecture, even repository style code has availabled for speed up your develop.
 
 
+## Documentation
+https://wirnat.github.io/aksara-cli-doc/
+
 
