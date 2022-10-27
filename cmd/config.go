@@ -22,6 +22,8 @@ func OpenConfig(p string) (b Config, err error) {
 		return Config{}, errFile
 	}
 
+	defer jsonData.Close()
+
 	byteValue, err := ioutil.ReadAll(jsonData)
 	if err != nil {
 		return Config{}, err

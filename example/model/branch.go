@@ -10,4 +10,5 @@ type Branch struct {
 /*
 	@model Branch
 	@service branch
+	@snakecase branch
 */

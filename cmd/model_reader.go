@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/wirnat/aksara-cli/util/stringtor"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -95,17 +94,4 @@ func (r modelScanner) Scan() (bl *Blueprint, err error) {
 	}
 
 	return
-}
-
-func getCode(file io.Reader, code string) string {
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.Contains(line, code) {
-			field := strings.Fields(line)
-			return field[1]
-		}
-	}
-
-	return ""
 }

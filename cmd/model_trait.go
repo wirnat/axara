@@ -84,6 +84,10 @@ func (r *ModelTrait) getEmbeddedModelField(modelName string, config Config) erro
 			}
 
 			r.getModelField(fileOS, config)
+			err = fileOS.Close()
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

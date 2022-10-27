@@ -27,7 +27,7 @@ type {{.Model}}Store interface {
 }
 
 type {{.Model}}Update interface {
-	Update(ctx context.Context, {{.Model}} *model.{{.Model}}, condition ...{{.ModelSnake}}_request.{{.Model}}Param) error
+	Update(ctx context.Context, {{.Model}} *model.{{.Model}}, condition ...{{.Meta.snakecase}}_request.{{.Model}}Param) error
 }
 
 type {{.Model}}Delete interface {

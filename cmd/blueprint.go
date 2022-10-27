@@ -50,6 +50,11 @@ func (b Blueprint) Generate() error {
 		if err != nil {
 			return err
 		}
+
+		err = fileTrait.Close()
+		if err != nil {
+			panic(err)
+		}
 	}
 	return nil
 }

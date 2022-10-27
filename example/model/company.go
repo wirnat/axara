@@ -8,4 +8,5 @@ type Company struct {
 /*
 	@model Company
 	@service company
+	@snakecase company
 */

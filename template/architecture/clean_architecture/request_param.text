@@ -1,4 +1,4 @@
-package {{.ModelSnake}}_request
+package {{.Meta.snakecase}}_request
 
 type {{.Model}}Param struct {
 	{{- range $m:=.ModelFields }}

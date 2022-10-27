@@ -42,7 +42,7 @@ var generatorCmd = &cobra.Command{
 	},
 }
 
-const VERSION = "v0.0.2"
+const VERSION = "v0.0.4"
 
 var checkVersion = &cobra.Command{
 	Use:   "version",
