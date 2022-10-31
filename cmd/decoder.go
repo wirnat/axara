@@ -38,7 +38,10 @@ func (d *decoder) convert(code string, trait *Trait) (r string) {
 	code = strings.ReplaceAll(code, "~model_path~", d.ModelPath)
 
 	code = strings.ReplaceAll(code, "~result_path~", d.ResultPath)
-
+	code = strings.ReplaceAll(code, "~model_snake~", trait.ModelSnake)
+	code = strings.ReplaceAll(code, "~model~", trait.Model)
+	code = strings.ReplaceAll(code, "~model_snake~", trait.ModelCamel)
+	code = strings.ReplaceAll(code, "~model_camel~", trait.ModelCamel)
 	code = strings.ReplaceAll(code, "~module_name~", d.ModuleName)
 	code = strings.ReplaceAll(code, "~model_path~", d.ModelPath)
 

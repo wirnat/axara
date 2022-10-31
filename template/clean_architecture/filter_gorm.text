@@ -1,0 +1,15 @@
+package {{.ModelSnake}}_gorm
+
+import (
+	"{{.ModuleName}}/{{.ResultPath}}/{{.Meta.module}}/request/{{.ModelSnake}}_request"
+	"gorm.io/gorm"
+
+)
+
+func filter(db *gorm.DB, Param {{.ModelSnake}}_request.{{.Model}}Param) {
+	{{- range $m:=.ModelFields }}
+	if Param.{{$m.Name}} != nil {
+    *db = *db.Where("{{$m.Json}}", *Param.{{$m.Name -}})
+    }
+    {{- end}}
+}

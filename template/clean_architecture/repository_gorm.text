@@ -1,0 +1,79 @@
+package {{.ModelSnake}}_gorm
+
+import (
+	"context"
+	"fmt"
+	"{{.ModuleName}}/{{.ModelPath}}"
+	"{{.ModuleName}}/modules/{{.Meta.module}}/request/{{.ModelSnake}}_request"
+	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/response"
+	"{{.Meta.import_paginate}}"
+	"gorm.io/gorm"
+)
+
+type {{.ModelCamel}}Gorm struct {
+	db gorm.DB
+}
+
+func New(db gorm.DB) *{{.ModelCamel}}Gorm {
+	return &{{.ModelCamel}}Gorm{db: db}
+}
+
+func (c {{.ModelCamel}}Gorm) Fetch(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Param) (res []model.{{.Model}}, err error) {
+	filter(&c.db, Param)
+	err = c.db.Find(&res).Error
+	return
+}
+
+func (c {{.ModelCamel}}Gorm) Get(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Param) (res model.{{.Model}}, err error) {
+	filter(&c.db, Param)
+	err = c.db.First(&res).Error
+	return
+}
+
+func (c {{.ModelCamel}}Gorm) Store(ctx context.Context, {{.ModelSnake}} *model.{{.Model}}) error {
+	db, err := getTx(ctx)
+	if err == nil {
+		c.db = *db
+	}
+
+	return c.db.Create(&{{.ModelSnake}}).Error
+}
+
+func (c {{.ModelCamel}}Gorm) Update(ctx context.Context, {{.ModelSnake}} *model.{{.Model}}, condition ...{{.ModelSnake}}_request.{{.Model}}Param) error {
+	db, err := getTx(ctx)
+	if err == nil {
+		c.db = *db
+	}
+
+	for _, p := range condition {
+        filter(&c.db, p)
+    }
+
+	return c.db.Updates(&{{.ModelSnake}}).Error
+}
+
+func (c {{.ModelCamel}}Gorm) Delete(ctx context.Context, uuid string) error {
+	db, err := getTx(ctx)
+	if err == nil {
+		c.db = *db
+	}
+
+	return db.Delete(model.{{.Model}}{}, fmt.Sprintf("uuid=%v", uuid)).Error
+}
+
+func (c {{.ModelCamel}}Gorm) Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) (response.{{.Model}}Paginate, error) {
+	res := response.{{.Model}}Paginate{
+		Pagination: &paginator.Pagination{
+			PaginateReq: param.PaginateReq,
+		},
+	}
+
+	filter(&c.db, param)
+	err := c.db.Debug().Scopes(paginator.PaginateV2(&res.Result, &c.db, res.Pagination)).Find(&res.Result).Error
+	if err != nil {
+		return response.{{.Model}}Paginate{}, err
+	}
+
+	return res, nil
+}
+

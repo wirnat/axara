@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	Key          string        `json:"key"`
-	ModelPath    string        `json:"model_path"`
-	ResultPath   string        `json:"result_path"`
-	ModuleName   string        `json:"module_name"`
-	ModuleTraits []ModuleTrait `json:"module_traits"`
+	Key           string        `json:"key"`
+	ModelPath     string        `json:"model_path"`
+	ResultPath    string        `json:"result_path"`
+	ModuleName    string        `json:"module_name"`
+	ExecuteModels []string      `json:"execute_models"`
+	ModuleTraits  []ModuleTrait `json:"module_traits"`
 }
 
 func OpenConfig(p string) (b Config, err error) {

@@ -1,0 +1,71 @@
+package {{.ModelSnake}}_usecase_v1
+
+import (
+	"context"
+	"{{.ModuleName}}/example/model"
+	"github.com/google/uuid"
+	"{{.ModuleName}}/modules/{{.ModelSnake}}/{{.ModelSnake}}_usecase"
+	"{{.ModuleName}}/modules/{{.ModelSnake}}/repository/{{.ModelSnake}}_repository"
+	"{{.ModuleName}}/modules/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
+)
+
+type {{.ModelCamel}}Usecase struct {
+	{{.ModelCamel}}Store  {{.ModelSnake}}_repository.{{.Model}}Store
+	{{.ModelCamel}}Get    {{.ModelSnake}}_repository.{{.Model}}Get
+	{{.ModelCamel}}Update {{.ModelSnake}}_repository.{{.Model}}Update}
+
+func New{{.Model}}Usecase(
+    {{.ModelCamel}}Store {{.ModelSnake}}_repository.{{.Model}}Store,
+    {{.ModelCamel}}Update {{.ModelSnake}}_repository.{{.Model}}Update,
+    {{.ModelCamel}}Get    {{.ModelSnake}}_repository.{{.Model}}Get,
+    ) {{.ModelSnake}}_usecase.{{.Model}}Usecase {
+	return &{{.ModelCamel}}Usecase{
+	{{- .ModelCamel}}Store: {{.ModelCamel}}Store,
+	{{- .ModelCamel}}Update: {{.ModelCamel}}Update,
+	{{- .ModelCamel}}Get: {{.ModelCamel}}Get,
+	}
+}
+
+func (u {{.ModelCamel}}Usecase) Store(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Store) (r model.{{.Model}}, err error) {
+	{{- range $m:=.ModelFields }}
+	{{- if and (ne $m.Type "time.Time") (ne $m.Type "gorm.DeletedAt")}}
+	{{- if $m.Meta.auto_fill}}{{else}}
+	{{- if eq $m.Name "UUID"}}
+	 r.{{- $m.Name}} = uuid.New().String()
+	{{- else }}
+     r.{{- $m.Name}} = Param.{{$m.Name}}
+    {{- end}}
+    {{- end}}
+    {{- end}}
+    {{- end}}
+
+	err = u.{{.ModelCamel}}Store.Store(ctx, &r)
+	return
+}
+
+func (u {{.ModelCamel}}Usecase) Update(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Update) (r model.{{.Model}}, err error) {
+	{{- range $m:=.ModelFields }}
+	{{- if and (ne $m.Type "time.Time") (ne $m.Type "gorm.DeletedAt")}}
+	{{- if $m.Meta.auto_fill}}{{else}}
+	{{- if ne $m.Name "UUID"}}
+	    {{- if $m.IsPtr}}
+	    r.{{$m.Name}} = *Param.{{$m.Name}}
+	    {{- else}}
+	     r.{{$m.Name}} = Param.{{$m.Name}}
+	    {{- end}}
+    {{- end}}
+    {{- end}}
+	{{- end}}
+	{{- end}}
+
+	err = u.{{.ModelCamel}}Update.Update(ctx, &r,{{.ModelSnake}}_request.{{.Model}}Param{UUID: &r.UUID})
+	if err!=nil{
+	    return
+	}
+
+	r, err = u.{{.ModelCamel}}Get.Get(ctx, {{.ModelSnake}}_request.{{.Model}}Param{
+    	UUID: &r.UUID,
+    })
+
+	return
+}

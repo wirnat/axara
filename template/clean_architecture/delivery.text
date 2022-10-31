@@ -1,0 +1,115 @@
+package {{.ModelSnake}}_delivery
+
+import (
+	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/repository/{{.ModelSnake}}_repository"
+	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
+	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/{{.ModelSnake}}_usecase"
+	"{{.Meta.import_contextor}}"
+)
+
+type {{.Model}}Rest struct {
+	{{.Model}}Interactor {{.ModelSnake}}_usecase.{{.Model}}Usecase
+	{{.Model}}FetchRepo  {{.ModelSnake}}_repository.{{.Model}}Fetch
+	{{.Model}}GetRepo    {{.ModelSnake}}_repository.{{.Model}}Get
+	{{.Model}}DeleteRepo {{.ModelSnake}}_repository.{{.Model}}Delete
+	{{.Model}}Paginate   {{.ModelSnake}}_repository.{{.Model}}Paginate
+}
+
+func New{{.Model}}Rest() *{{.Model}}Rest {
+	return &{{.Model}}Rest{}
+}
+
+func (r {{.Model}}Rest) Show(ctx *contextor.Contextor) error {
+	param := {{.ModelSnake}}_request.{{.Model}}Param{}
+	err := ctx.BindQuery(&param)
+	if err != nil {
+		return err
+	}
+
+	res, err := r.{{.Model}}GetRepo.Get(ctx.ToContext(), param)
+	if err != nil {
+		return ctx.JSON(400, err.Error())
+	}
+
+	return ctx.JSON(200, res)
+}
+
+func (r {{.Model}}Rest) Find(ctx *contextor.Contextor) error {
+	param := {{.ModelSnake}}_request.{{.Model}}Param{}
+	err := ctx.BindQuery(&param)
+	if err != nil {
+		return ctx.JSON(400, err.Error())
+	}
+
+	res, err := r.{{.Model}}FetchRepo.Fetch(ctx.ToContext(), param)
+	if err != nil {
+		return ctx.JSON(404, err.Error())
+	}
+
+	return ctx.JSON(200, res)
+}
+
+func (r {{.Model}}Rest) Store(ctx *contextor.Contextor) error {
+	param := new({{.ModelSnake}}_request.{{.Model}}Store)
+	err := ctx.Bind(param)
+	if err != nil {
+		return ctx.JSON(400, err.Error())
+	}
+
+	err = ctx.Validate(param)
+	if err != nil {
+		return err
+	}
+
+	res, err := r.{{.Model}}Interactor.Store(ctx.ToContext(), *param)
+	if err != nil {
+		return ctx.JSON(500, err.Error())
+	}
+	return ctx.JSON(200, res)
+}
+
+func (r {{.Model}}Rest) Update(ctx *contextor.Contextor) error {
+	param := new({{.ModelSnake}}_request.{{.Model}}Update)
+	err := ctx.Bind(param)
+	if err != nil {
+		return ctx.JSON(400, err.Error())
+	}
+	param.UUID = ctx.Param("uuid")
+
+	err = ctx.Validate(param)
+	if err != nil {
+		return err
+	}
+
+	res, err := r.{{.Model}}Interactor.Update(ctx.ToContext(), *param)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(200, res)
+}
+
+func (r {{.Model}}Rest) Delete(ctx *contextor.Contextor) error {
+	uuid := ctx.Param("uuid")
+	err := r.{{.Model}}DeleteRepo.Delete(ctx.ToContext(), uuid)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(200, uuid)
+}
+
+func (r {{.Model}}Rest) Paginate(ctx *contextor.Contextor) error {
+	param := {{.ModelSnake}}_request.{{.Model}}Param{}
+	err := ctx.Bind(&param)
+	if err != nil {
+		return ctx.JSON(400, err.Error())
+	}
+
+	res, err := r.{{.Model}}Paginate.Paginate(ctx.ToContext(), param)
+	if err != nil {
+		return ctx.JSON(404, err.Error())
+	}
+
+	return ctx.JSON(200, res)
+}

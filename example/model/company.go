@@ -2,11 +2,10 @@ package model
 
 type Company struct {
 	BaseModel
-	Name string `json:"name"`
+	Name string `json:"name"` //@meta validate_store:true
 }
 
 /*
 	@model Company
-	@service company
-	@snakecase company
+	@module company
 */

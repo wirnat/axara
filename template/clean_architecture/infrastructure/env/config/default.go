@@ -1,0 +1,67 @@
+package conf
+
+var DefaultAppConf = AppConf{
+	System: System{
+		Env:                 "",
+		Address:             "",
+		OssType:             "local",
+		DbType:              "mysql",
+		MigrationSourcePath: "./infrastructure/migration/source",
+	},
+	Mysql: Mysql{
+		Path:              "localhost",
+		Port:              "3301",
+		Config:            "charset=utf8mb4&parseTime=True&loc=Local",
+		DbName:            "msglow_customer_app",
+		Username:          "app",
+		Password:          "123456",
+		MaxIdleConnection: 0,
+		MaxOpenConnection: 0,
+		LogMode:           "",
+		LogZap:            false,
+	},
+	Pgsql: Pgsql{
+		Path:              "localhost",
+		Port:              "",
+		Config:            "",
+		DbName:            "",
+		Username:          "",
+		Password:          "",
+		MaxIdleConnection: 0,
+		MaxOpenConnection: 0,
+		LogMode:           "",
+		LogZap:            false,
+	},
+	Redis: Redis{
+		DB:       0,
+		Address:  "localhost:6379",
+		Password: "",
+	},
+	Captcha: Captcha{
+		KeyLong:     6,
+		ImageWidth:  240,
+		ImageHeight: 80,
+	},
+	OssLocal: OssLocal{Path: "./oss/local"},
+	OssAli: OssAli{
+		Endpoint:        "localhost",
+		AccessKeyID:     "123",
+		AccessKeySecret: "123",
+		BucketName:      "123",
+		BucketUrl:       "123",
+		BasePath:        "123",
+	},
+	Email: Email{
+		Host:       "",
+		Port:       "",
+		Username:   "",
+		Password:   "",
+		Encryption: "",
+	},
+	JWT: JWT{
+		SigningKey:  "",
+		ExpiresTime: 0,
+		BufferTime:  0,
+		Issuer:      "",
+	},
+}

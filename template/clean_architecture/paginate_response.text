@@ -1,0 +1,11 @@
+package response
+
+import (
+	"{{.ModuleName}}/{{.ModelPath}}"
+    "{{.ModuleName}}/template/clean_architecture/infrastructure/paginator"
+)
+
+type {{.Model}}Paginate struct {
+	Pagination *paginator.Pagination `json:"paginator,omitempty"`
+	Result     []model.{{.Model}}      `json:"result"`
+}
