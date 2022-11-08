@@ -30,6 +30,6 @@ Make your life easier, this CLI will autogenerate code and architecture base on 
 
 
 ## Documentation
-https://wirnat.github.io/aksara-cli-doc/
+[https://wirnat.github.io/aksara-cli-doc/](https://wirnat.github.io/aksara-cli-doc/)
 
 
