@@ -2,9 +2,9 @@ package {{.ModelSnake}}_repository
 
 import (
 	"context"
-	"{{.ModuleName}}/{{.ModelPath}}"
-	"{{.ModuleName}}/modules/{{.Meta.module}}/request/{{.ModelSnake}}_request"
-	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/response"
+	"{{.Meta.import_model}}"
+	"{{.Meta.import_request}}"
+	"{{.Meta.import_response}}"
 )
 
 type {{.Model}} interface {

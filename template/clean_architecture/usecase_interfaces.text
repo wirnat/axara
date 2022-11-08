@@ -2,9 +2,8 @@ package {{.ModelSnake}}_usecase
 
 import (
     "context"
-    "{{.ModuleName}}/{{.ModelPath}}"
-    "{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
-
+    "{{.Meta.import_model}}"
+    "{{.Meta.import_request}}"
 )
 
 type {{.Model}}Usecase interface {

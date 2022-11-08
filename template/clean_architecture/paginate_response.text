@@ -1,8 +1,8 @@
 package response
 
 import (
-	"{{.ModuleName}}/{{.ModelPath}}"
-    "{{.ModuleName}}/template/clean_architecture/infrastructure/paginator"
+	"{{.Meta.import_model}}"
+    "{{.Meta.import_pagination}}"
 )
 
 type {{.Model}}Paginate struct {

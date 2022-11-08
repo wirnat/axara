@@ -1,0 +1,20 @@
+{
+  "key": "ᬅᬓ᭄ᬱᬭ",
+  "model_path": "example/model",
+  "result_path": "modules",
+  "module_name": "github.com/wirnat/aksara-cli",
+  "execute_models": ["Company","Branch"],
+  "module_traits": [
+    {
+      "name": "~model_snake~ repository interfaces",
+      "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository",
+      "template": "template/clean_architecture/repository_interfaces.text",
+      "file_name": "~model_snake~.go",
+      "meta": {
+        "import_request": "~module_name~/~result_path~/~model_snake~/request/~model_snake~_request",
+        "import_contextor": "github.com/wirnat/aksara-cli/template/clean_architecture/infrastructure/contextor"
+      },
+      "active": false
+    }
+  ]
+}

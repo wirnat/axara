@@ -1,10 +1,10 @@
 package {{.ModelSnake}}_delivery
 
 import (
-	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/repository/{{.ModelSnake}}_repository"
-	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
-	"{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/{{.ModelSnake}}_usecase"
-	"{{.Meta.import_contextor}}"
+    "{{.Meta.import_contextor}}"
+    "{{.Meta.import_usecase}}"
+    "{{.Meta.import_repository}}"
+    "{{.Meta.import_request}}"
 )
 
 type {{.Model}}Rest struct {

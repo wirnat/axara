@@ -2,11 +2,11 @@ package {{.ModelSnake}}_usecase_v1
 
 import (
 	"context"
-	"{{.ModuleName}}/example/model"
+	"{{.Meta.import_model}}"
 	"github.com/google/uuid"
-	"{{.ModuleName}}/modules/{{.ModelSnake}}/{{.ModelSnake}}_usecase"
-	"{{.ModuleName}}/modules/{{.ModelSnake}}/repository/{{.ModelSnake}}_repository"
-	"{{.ModuleName}}/modules/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
+   "{{.Meta.import_usecase}}"
+   "{{.Meta.import_repository}}"
+   "{{.Meta.import_request}}"
 )
 
 type {{.ModelCamel}}Usecase struct {

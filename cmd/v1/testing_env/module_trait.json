@@ -1,0 +1,11 @@
+{
+  "module_traits": [
+    {
+      "name": "~model_snake~ store param",
+      "dir": "~result_path~/~model_snake~/request/~model_snake~_request",
+      "template": "template/clean_architecture/param_store.text",
+      "file_name": "~model_snake~_store.go",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+package v1
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+func Test_parser(t *testing.T) {
+	conYaml := &Constructor{
+		Key:        "ᬅᬓ᭄ᬱᬭ",
+		ModelPath:  "example/model",
+		ModuleName: "github.com/wirnat/aksara-cli",
+		ExecuteModels: []string{
+			"Company",
+			"Branch",
+		},
+		ModuleTraits: []ModuleTrait{
+			{
+				Name:     "~model_snake~ repository interfaces",
+				Dir:      "~result_path~/~model_snake~/repository/~model_snake~_repository",
+				FileName: "~model_snake~.go",
+				Template: "template/clean_architecture/repository_interfaces.text",
+				Active:   true,
+			},
+			{
+				Name:     "~model_snake~ store param",
+				Dir:      "~result_path~/~model_snake~/request/~model_snake~_request",
+				FileName: "~model_snake~_store.go",
+				Template: "template/clean_architecture/param_store.text",
+				Active:   true,
+			},
+		},
+		Meta: map[string]string{
+			"result_path": "module",
+		},
+		IncludeModuleTraits: []string{
+			"testing_env/module_trait.yaml",
+		},
+		ResultPath: "",
+	}
+
+	conJSON := &Constructor{
+		Key:        "ᬅᬓ᭄ᬱᬭ",
+		ModelPath:  "example/model",
+		ModuleName: "github.com/wirnat/aksara-cli",
+		ExecuteModels: []string{
+			"Company",
+			"Branch",
+		},
+		ModuleTraits: []ModuleTrait{
+			{
+				Name:     "~model_snake~ repository interfaces",
+				Dir:      "~result_path~/~model_snake~/repository/~model_snake~_repository",
+				FileName: "~model_snake~.go",
+				Template: "template/clean_architecture/repository_interfaces.text",
+				Active:   true,
+			},
+			{
+				Name:     "~model_snake~ store param",
+				Dir:      "~result_path~/~model_snake~/request/~model_snake~_request",
+				FileName: "~model_snake~_store.go",
+				Template: "template/clean_architecture/param_store.text",
+				Active:   true,
+			},
+		},
+		Meta: map[string]string{
+			"result_path": "module",
+		},
+		IncludeModuleTraits: []string{
+			"testing_env/module_trait.json",
+		},
+		ResultPath: "",
+	}
+
+	t.Run("Match to Constructor struct", func(t *testing.T) {
+		b, err := NewConstructor("testing_env/clean_architecture_v1.yaml")
+		assert.Nil(t, err)
+		assert.Equalf(t, conYaml, b, "fromYAML()")
+
+		c, err := NewConstructor("testing_env/clean_architecture_v1.json")
+		assert.Equalf(t, conJSON, c, "fromJSON()")
+		assert.Nil(t, err)
+	})
+}

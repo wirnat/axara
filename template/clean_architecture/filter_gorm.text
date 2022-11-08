@@ -1,9 +1,8 @@
 package {{.ModelSnake}}_gorm
 
 import (
-	"{{.ModuleName}}/{{.ResultPath}}/{{.Meta.module}}/request/{{.ModelSnake}}_request"
 	"gorm.io/gorm"
-
+    "{{.Meta.import_request}}"
 )
 
 func filter(db *gorm.DB, Param {{.ModelSnake}}_request.{{.Model}}Param) {
