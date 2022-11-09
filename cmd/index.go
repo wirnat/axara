@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	v1 "github.com/wirnat/aksara-cli/cmd/v1"
+	v1 "github.com/wirnat/axara/cmd/v1"
 )
 
 var generatorCmd = &cobra.Command{
@@ -23,7 +23,7 @@ var generatorCmd = &cobra.Command{
 	},
 }
 
-const VERSION = "v1.0.0"
+const VERSION = "v2.0.0"
 
 var checkVersion = &cobra.Command{
 	Use:   "version",

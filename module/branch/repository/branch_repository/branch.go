@@ -2,9 +2,9 @@ package branch_repository
 
 import (
 	"context"
-	"github.com/wirnat/aksara-cli/example/model"
-	"github.com/wirnat/aksara-cli/module/branch/request/branch_request"
-	"github.com/wirnat/aksara-cli/module/branch/response"
+	"github.com/wirnat/axara/example/model"
+	"github.com/wirnat/axara/module/branch/request/branch_request"
+	"github.com/wirnat/axara/module/branch/response"
 )
 
 type Branch interface {

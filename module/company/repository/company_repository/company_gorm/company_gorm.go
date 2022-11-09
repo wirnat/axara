@@ -3,10 +3,10 @@ package company_gorm
 import (
 	"context"
 	"fmt"
-	"github.com/wirnat/aksara-cli/example/model"
-    "github.com/wirnat/aksara-cli/module/company/request/company_request"
-    "github.com/wirnat/aksara-cli/module/company/response"
-	"github.com/wirnat/aksara-cli/example/infrastructure/paginator"
+	"github.com/wirnat/axara/example/model"
+	"github.com/wirnat/axara/module/company/request/company_request"
+	"github.com/wirnat/axara/module/company/response"
+	"github.com/wirnat/axara/example/infrastructure/paginator"
 	"gorm.io/gorm"
 )
 
@@ -46,8 +46,8 @@ func (c companyGorm) Update(ctx context.Context, company *model.Company, conditi
 	}
 
 	for _, p := range condition {
-        filter(&c.db, p)
-    }
+		filter(&c.db, p)
+	}
 
 	return c.db.Updates(&company).Error
 }

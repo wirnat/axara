@@ -2,7 +2,7 @@ package v0
 
 import (
 	"bufio"
-	"github.com/wirnat/aksara-cli/util/stringtor"
+	"github.com/wirnat/axara/util/stringtor"
 	"io"
 	"io/ioutil"
 	"os"

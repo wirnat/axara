@@ -9,7 +9,7 @@ func Test_parser(t *testing.T) {
 	conYaml := &Constructor{
 		Key:        "ᬅᬓ᭄ᬱᬭ",
 		ModelPath:  "example/model",
-		ModuleName: "github.com/wirnat/aksara-cli",
+		ModuleName: "github.com/wirnat/axara",
 		ExecuteModels: []string{
 			"Company",
 			"Branch",
@@ -42,7 +42,7 @@ func Test_parser(t *testing.T) {
 	conJSON := &Constructor{
 		Key:        "ᬅᬓ᭄ᬱᬭ",
 		ModelPath:  "example/model",
-		ModuleName: "github.com/wirnat/aksara-cli",
+		ModuleName: "github.com/wirnat/axara",
 		ExecuteModels: []string{
 			"Company",
 			"Branch",

@@ -3,7 +3,7 @@ package v1
 import (
 	"bufio"
 	"github.com/iancoleman/strcase"
-	"github.com/wirnat/aksara-cli/util/stringtor"
+	"github.com/wirnat/axara/util/stringtor"
 	"io"
 	"io/ioutil"
 	"os"

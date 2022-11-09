@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/iancoleman/strcase"
 	"github.com/sirupsen/logrus"
-	"github.com/wirnat/aksara-cli/util/stringtor"
+	"github.com/wirnat/axara/util/stringtor"
 	"io/ioutil"
 	"os"
 	"path/filepath"
