@@ -21,7 +21,7 @@ type Puller interface {
 
 const (
 	basePath = ""
-	token    = "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"
+	token    = "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"
 )
 
 type gitPuller struct {
