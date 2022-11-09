@@ -32,8 +32,23 @@ var checkVersion = &cobra.Command{
 		fmt.Println("Aksara CLI version " + VERSION)
 	},
 }
+var getter = &cobra.Command{
+	Use:   "get",
+	Short: "Get CLI Item from github",
+	Run: func(cmd *cobra.Command, args []string) {
+		gp := v1.NewGitPuller()
+		if len(args) != 2 {
+			logrus.Fatalf("invalid get argument, ex: aksara-cli get github.com/wirnat/basic-template template")
+		}
+		err := gp.Pull(args[0], args[1])
+		if err != nil {
+			logrus.Fatal(err)
+		}
+	},
+}
 
 func init() {
 	rootCmd.AddCommand(generatorCmd)
 	rootCmd.AddCommand(checkVersion)
+	rootCmd.AddCommand(getter)
 }

@@ -264,9 +264,9 @@ func Test_generator_Generate(t *testing.T) {
 					Traits: []ModuleTrait{
 						{
 							Name:   "infrastructure",
-							Active: false,
+							Active: true,
 							Dir:    "testing_env/infrastructure",
-							Remote: "github.com/rusli-nasir/gcp-kubernetes-bucket-nfs-server",
+							Remote: "github.com/wirnat/template-aksara-cli-clean-arch",
 						},
 					},
 				},

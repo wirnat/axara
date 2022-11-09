@@ -21,7 +21,7 @@ type Puller interface {
 
 const (
 	basePath = ""
-	token    = "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"
+	token    = "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"
 )
 
 type gitPuller struct {
@@ -71,6 +71,15 @@ func (g gitPuller) Pull(p string, targetDir string) error {
 		targetDir = "aksara-storage"
 	}
 	cr := extractLink(p)
+	cr.targetDir = targetDir
+	err := g.getContent(cr)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g gitPuller) getContent(cr cred) error {
 	_, directoryContent, _, err := g.client.Repositories.GetContents(context.Background(), cr.owner, cr.repo, cr.path, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -92,12 +101,12 @@ func (g gitPuller) Pull(p string, targetDir string) error {
 					}
 				}
 			}
-			g.downloadContents(c, local, cr.owner, cr.repo, targetDir)
+			g.downloadContents(c, local, cr.owner, cr.repo, cr.targetDir)
 		case "dir":
-			g.Pull(*c.Path, targetDir)
+			cr.path = *c.Path
+			g.getContent(cr)
 		}
 	}
-
 	return nil
 }
 

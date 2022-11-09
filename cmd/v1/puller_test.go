@@ -34,7 +34,7 @@ func Test_gitPuller_Pull(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			targetDir := "testing_env/storage"
 			g := NewGitPuller()
-			err := g.Pull("github.com/rusli-nasir/gcp-kubernetes-bucket-nfs-server", targetDir)
+			err := g.Pull("github.com/wirnat/template-aksara-cli-clean-arch", targetDir)
 			f, err := ioutil.ReadDir(targetDir)
 			t1 := assert.Nil(t, err)
 			t2 := assert.Condition(t, func() (success bool) {

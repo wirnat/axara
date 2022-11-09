@@ -76,10 +76,16 @@ func (g generator) Generate(c Constructor) error {
 */
 func (g generator) generateOnce(c Constructor) error {
 	for _, trait := range c.Traits {
+		if !trait.Active {
+			continue
+		}
 		if trait.Remote != "" {
-			err := g.Puller.Pull(trait.Remote, trait.Dir)
-			if err != nil {
-				return err
+			f, err := ioutil.ReadDir(trait.Dir)
+			if len(f) < 1 {
+				err = g.Puller.Pull(trait.Remote, trait.Dir)
+				if err != nil {
+					return err
+				}
 			}
 		} else {
 			//TODO: get builder and set to template
