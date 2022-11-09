@@ -1,0 +1,18 @@
+package {{.ModelSnake}}_request
+
+import (
+    "time"
+{{- range $m:=.ModelFields }}
+    {{- if eq $m.Type "gorm.DeletedAt"}}
+    "gorm.io/gorm"
+    {{- end}}
+{{- end}}
+"{{.Meta.import_pagination}}"
+)
+
+type {{.Model}}Param struct {
+	{{- range $m:=.ModelFields }}
+    {{$m.Name }} *{{$m.Type }} `json:"{{$m.Json -}}"`
+    {{- end}}
+    paginator.PaginateReq
+}

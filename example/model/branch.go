@@ -8,7 +8,7 @@ type Branch struct {
 }
 
 /*
-	@model Branch
-	@service branch
-	@snakecase branch
+	~model~ Branch
+	~module~ branch
+	~end_model~
 */

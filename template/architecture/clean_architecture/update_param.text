@@ -1,7 +1,0 @@
-package {{.Meta.snakecase}}_request
-
-type {{.Model}}Update struct {
-	{{- range $m:=.ModelFields }}
-    {{$m.Name }} *{{$m.Type }} `json:"{{$m.Json -}}"`
-    {{- end}}
-}

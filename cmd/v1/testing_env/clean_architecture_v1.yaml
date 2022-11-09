@@ -1,0 +1,22 @@
+key: ᬅᬓ᭄ᬱᬭ
+model_path: example/model
+module_name: github.com/wirnat/aksara-cli
+execute_models:
+  - Company
+  - Branch
+meta:
+  result_path: module
+include_module_traits:
+  - testing_env/module_trait.yaml
+module_traits:
+  - name: "~model_snake~ repository interfaces"
+    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
+    template: template/clean_architecture/repository_interfaces.text
+    file_name: "~model_snake~.go"
+    active: true
+    depend: infrastructure
+traits:
+  - name: "infrastructure"
+    remote: "github.com/rusli-nasir/gcp-kubernetes-bucket-nfs-server"
+    dir: "infrastructure"
+    active: true

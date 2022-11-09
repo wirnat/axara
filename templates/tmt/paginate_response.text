@@ -1,0 +1,11 @@
+package response
+
+import (
+	"{{.Meta.import_model}}"
+    "{{.Meta.import_pagination}}"
+)
+
+type {{.Model}}Paginate struct {
+	Pagination *paginator.Pagination `json:"paginator,omitempty"`
+	Result     []model.{{.Model}}      `json:"result"`
+}
