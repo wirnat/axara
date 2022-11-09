@@ -2,9 +2,9 @@ package company_repository
 
 import (
 	"context"
-	"github.com/wirnat/aksara-cli/example/model"
-	"github.com/wirnat/aksara-cli/module/company/request/company_request"
-	"github.com/wirnat/aksara-cli/module/company/response"
+	"github.com/wirnat/axara/example/model"
+	"github.com/wirnat/axara/module/company/request/company_request"
+	"github.com/wirnat/axara/module/company/response"
 )
 
 type Company interface {

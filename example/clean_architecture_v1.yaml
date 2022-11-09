@@ -1,6 +1,6 @@
 key: ᬅᬓ᭄ᬱᬭ
 model_path: example/model
-module_name: github.com/wirnat/aksara-cli
+module_name: github.com/wirnat/axara
 execute_models:
   - Company
   - Branch

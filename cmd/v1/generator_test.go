@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/wirnat/aksara-cli/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/errors"
 	"io/ioutil"
 	"os"
 	"testing"

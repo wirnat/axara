@@ -2,7 +2,7 @@ package v1
 
 import (
 	"fmt"
-	"github.com/wirnat/aksara-cli/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"io/ioutil"
 	"os"

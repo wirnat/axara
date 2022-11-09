@@ -3,7 +3,7 @@ package v1
 import (
 	"bufio"
 	"fmt"
-	"github.com/wirnat/aksara-cli/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"os"
 	"path/filepath"

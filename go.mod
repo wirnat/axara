@@ -1,4 +1,4 @@
-module github.com/wirnat/aksara-cli
+module github.com/wirnat/axara
 
 go 1.17
 
