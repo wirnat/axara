@@ -15,8 +15,3 @@ module_traits:
     file_name: "~model_snake~.go"
     active: true
     depend: infrastructure
-traits:
-  - name: "infrastructure"
-    remote: "github.com/rusli-nasir/gcp-kubernetes-bucket-nfs-server"
-    dir: "infrastructure"
-    active: true

@@ -38,7 +38,7 @@ func (u branchUsecase) Update(ctx context.Context, Param branch_request.BranchUp
 	     r.ID = Param.ID
 	     r.CompanyID = Param.CompanyID
 	     r.Name = Param.Name
-	    r.Description = *Param.Description
+	    r.Description = &Param.Description
 
 	err = u.branchUpdate.Update(ctx, &r,branch_request.BranchParam{UUID: &r.UUID})
 	if err!=nil{

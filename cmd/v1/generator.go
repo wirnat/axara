@@ -12,12 +12,16 @@ import (
 type generator struct {
 	GetModelTrait FileModelTrait
 	ReaderMeta    ReaderMeta
+	Puller        Puller
 }
 
-func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta) *generator {
-	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta}
+func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Puller) *generator {
+	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta, Puller: puller}
 }
 
+/*
+	Generate generate file base on declared variable on constructor
+*/
 func (g generator) Generate(c Constructor) error {
 	if c.Key != "ᬅᬓ᭄ᬱᬭ" {
 		return errors.InvalidKey
@@ -36,9 +40,8 @@ func (g generator) Generate(c Constructor) error {
 
 	var mt []*ModelTrait
 	var mf []fs.FileInfo
-
 	//get meta from model and get scanned model trait
-	fmt.Println("Generating...")
+	fmt.Println("Collect meta from scanned model...")
 	for _, file := range files {
 		if file.IsDir() {
 			continue
@@ -54,6 +57,43 @@ func (g generator) Generate(c Constructor) error {
 		}
 	}
 
+	err = g.generateOnce(c)
+	if err != nil {
+		return err
+	}
+
+	err = g.generatePerModule(mt, mf, c)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+/*
+	generateOnce generate file in traits
+	this method executed only once when the generator executed
+*/
+func (g generator) generateOnce(c Constructor) error {
+	for _, trait := range c.Traits {
+		if trait.Remote != "" {
+			err := g.Puller.Pull(trait.Remote, trait.Dir)
+			if err != nil {
+				return err
+			}
+		} else {
+			//TODO: get builder and set to template
+		}
+	}
+
+	return nil
+}
+
+/*
+	generatePerModule generate file per scanned model
+	module traits will loop inside scan model process
+*/
+func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Constructor) error {
 	totalTask := 0
 	successTask := 0
 	//loop scanned model trait
@@ -121,8 +161,7 @@ func (g generator) Generate(c Constructor) error {
 		return errors.NoModelCanExecute
 	}
 
-	//
+	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= \n", successTask, totalTask)
 
-	fmt.Printf("====== Generate Done, %v/%v ======= \n", successTask, totalTask)
 	return nil
 }

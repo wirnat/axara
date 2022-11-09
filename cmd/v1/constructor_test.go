@@ -73,11 +73,11 @@ func Test_parser(t *testing.T) {
 	}
 
 	t.Run("Match to Constructor struct", func(t *testing.T) {
-		b, err := NewConstructor("testing_env/clean_architecture_v1.yaml")
+		b, err := NewConstructor("testing_env/test_construct.yaml")
 		assert.Nil(t, err)
 		assert.Equalf(t, conYaml, b, "fromYAML()")
 
-		c, err := NewConstructor("testing_env/clean_architecture_v1.json")
+		c, err := NewConstructor("testing_env/test_construct.json")
 		assert.Equalf(t, conJSON, c, "fromJSON()")
 		assert.Nil(t, err)
 	})

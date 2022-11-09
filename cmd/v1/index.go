@@ -16,7 +16,8 @@ func (a app) Generate() error {
 
 	modelReader := NewModelFileReader()
 	metaReader := NewReaderMeta()
-	generator := NewGenerator(modelReader, metaReader)
+	gitPuller := NewGitPuller()
+	generator := NewGenerator(modelReader, metaReader, gitPuller)
 	err = generator.Generate(*constructor)
 	if err != nil {
 		return err

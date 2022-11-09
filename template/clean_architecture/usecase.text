@@ -49,7 +49,7 @@ func (u {{.ModelCamel}}Usecase) Update(ctx context.Context, Param {{.ModelSnake}
 	{{- if $m.Meta.auto_fill}}{{else}}
 	{{- if ne $m.Name "UUID"}}
 	    {{- if $m.IsPtr}}
-	    r.{{$m.Name}} = *Param.{{$m.Name}}
+	    r.{{$m.Name}} = &Param.{{$m.Name}}
 	    {{- else}}
 	     r.{{$m.Name}} = Param.{{$m.Name}}
 	    {{- end}}

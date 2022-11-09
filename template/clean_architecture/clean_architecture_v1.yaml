@@ -16,7 +16,7 @@ meta:
   import_model: "~module_name~/~model_path~"
 
 include_module_traits:
-  - template/includes/module_trait.yaml
+  - template/clean_architecture/module_trait.yaml
 
 module_traits:
   - name: "~model_snake~ repository interfaces"
@@ -30,22 +30,4 @@ module_traits:
     template: template/clean_architecture/param_request.text
     file_name: "~model_snake~_request.go"
     active: true
-
-
-include_trait:
-  - template/trait.yaml
-
-trait:
-  - name: "~model_snake~ mock"
-    dir: "~result_path~/~module~/repository/~model_snake~_repository/~model_snake~_mock"
-    template: template/clean_architecture/repository_mock.text
-    file_name: "~model_snake~_mock.go"
-    active: true
-
-  - name: "infrastructure"
-    dir: "~result_path~/~module~/repository/~model_snake~_repository/~model_snake~_mock"
-    template: template/clean_architecture/repository_mock.text
-    file_name: "~model_snake~_mock.go"
-    active: true
-
 
