@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/wirnat/axara/example/model"
-	"github.com/wirnat/axara/module/branch/request/branch_request"
-	"github.com/wirnat/axara/module/branch/response"
+    "github.com/wirnat/axara/module/branch/request/branch_request"
+    "github.com/wirnat/axara/module/branch/response"
 	"github.com/wirnat/axara/example/infrastructure/paginator"
 	"gorm.io/gorm"
 )
@@ -46,8 +46,8 @@ func (c branchGorm) Update(ctx context.Context, branch *model.Branch, condition 
 	}
 
 	for _, p := range condition {
-		filter(&c.db, p)
-	}
+        filter(&c.db, p)
+    }
 
 	return c.db.Updates(&branch).Error
 }

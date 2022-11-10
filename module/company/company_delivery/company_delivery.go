@@ -1,10 +1,10 @@
 package company_delivery
 
 import (
-	"github.com/wirnat/axara/example/infrastructure/contextor"
-	"github.com/wirnat/axara/module/company/company_usecase"
-	"github.com/wirnat/axara/module/company/repository/company_repository"
-	"github.com/wirnat/axara/module/company/request/company_request"
+    "github.com/wirnat/axara/example/infrastructure/contextor"
+    "github.com/wirnat/axara/module/company/company_usecase"
+    "github.com/wirnat/axara/module/company/repository/company_repository"
+    "github.com/wirnat/axara/module/company/request/company_request"
 )
 
 type CompanyRest struct {

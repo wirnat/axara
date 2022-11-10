@@ -1,6 +1,6 @@
 package key
 
 const (
-	GitKey  = "git-key"
+	//Storage is local database that's created by badger
 	Storage = "/tmp/axara-storage"
 )

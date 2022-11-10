@@ -1,8 +1,11 @@
 package v1
 
 import (
+	"errors"
 	"fmt"
-	"github.com/wirnat/axara/cmd/v1/errors"
+	"github.com/iancoleman/strcase"
+	"github.com/janeczku/go-spinner"
+	er "github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -22,26 +25,36 @@ func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Pu
 /*
 	Generate generate file base on declared variable on constructor
 */
+
+var ss = spinner.StartNew("Wait, Typing the code...")
+
+var yesForAll *bool
+
 func (g generator) Generate(c Constructor) error {
+	defer ss.Stop()
+	ya := false
+	yesForAll = &ya
+
 	if c.Key != "ᬅᬓ᭄ᬱᬭ" {
-		return errors.InvalidKey
+		return er.InvalidKey
 	}
 	if c.ExecuteModels == nil {
-		return errors.NothingTodo
+		return er.NothingTodo
 	}
 	if c.ModuleTraits == nil {
-		return errors.NothingTodo
+		return er.NothingTodo
 	}
 
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
-		return errors.NoModelFound
+		return er.NoModelFound
 	}
+
+	fmt.Println("")
 
 	var mt []*ModelTrait
 	var mf []fs.FileInfo
 	//get meta from model and get scanned model trait
-	fmt.Println("Collect meta from scanned model...")
 	for _, file := range files {
 		if file.IsDir() {
 			continue
@@ -144,6 +157,35 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 
 			generatedFile := fmt.Sprintf("%v/%v", trait.Dir, trait.FileName)
+
+			if !*yesForAll {
+				if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
+					var input string
+				Scan:
+					{
+						ss.Stop()
+						fmt.Println(trait.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
+						_, err := fmt.Scanln(&input)
+						if err != nil {
+							fmt.Printf("	something is wrong")
+							continue
+						}
+					}
+
+					input = strcase.ToSnake(input)
+					if input == "ya" {
+						ya := true
+						yesForAll = &ya
+					}
+					if input == "no" && input == "n" {
+						continue
+					}
+					if input != "yes" && input != "y" && input != "ya" {
+						goto Scan
+					}
+				}
+			}
+
 			fileTrait, err := os.Create(generatedFile)
 			if err != nil {
 				fmt.Printf("	❌ create file failed")
@@ -164,7 +206,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 		}
 	}
 	if len(mt) < 1 {
-		return errors.NoModelCanExecute
+		return er.NoModelCanExecute
 	}
 
 	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= \n", successTask, totalTask)
