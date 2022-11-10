@@ -1,6 +1,6 @@
 key: ᬅᬓ᭄ᬱᬭ
 model_path: example/model
-module_name: github.com/wirnat/axara
+module_name: github.com/wirnat/aksara-cli
 execute_models:
   - Company
   - Branch
@@ -16,10 +16,18 @@ meta:
   import_model: "~module_name~/~model_path~"
 
 include_module_traits:
-  - example/module_trait.yaml
+  - template/clean_architecture/module_trait.yaml
 
-traits:
-  - name: "get infrastructure"
-    dir: "templates"
-    remote: "github.com/wirnat/template-aksara-cli-clean-arch"
+module_traits:
+  - name: "~model_snake~ repository interfaces"
+    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
+    template: template/clean_architecture/repository_interfaces.text
+    file_name: "~model_snake~.go"
     active: true
+
+  - name: "~model_snake~ fetch param"
+    dir: "~result_path~/~model_snake~/request/~model_snake~_request"
+    template: template/clean_architecture/param_request.text
+    file_name: "~model_snake~_request.go"
+    active: true
+
