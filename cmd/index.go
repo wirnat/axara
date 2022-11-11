@@ -1,5 +1,5 @@
 /*
-Copyright © 2022
+	Copyright © aksara-tech 2022
 */
 package cmd
 
@@ -77,7 +77,7 @@ var getter = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().String("git-key", "", "A search term for a dad joke.")
+	rootCmd.PersistentFlags().String("git-key", "", "set git access token, ex: set --git-key your-token")
 
 	rootCmd.AddCommand(generatorCmd)
 	rootCmd.AddCommand(checkVersion)

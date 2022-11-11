@@ -14,12 +14,14 @@ meta:
   import_paginate: "~module_name~/template/clean_architecture/infrastructure/paginator"
   import_pagination: "~module_name~/example/infrastructure/paginator"
   import_model: "~module_name~/~model_path~"
+  tmt_dir: "templates/clean_architecture"
 
 include_module_traits:
   - example/module_trait.yaml
 
 traits:
-  - name: "get infrastructure"
-    dir: "templates"
+  - name: "get templates"
+    dir: "~tmt_dir~"
     remote: "github.com/wirnat/template-aksara-cli-clean-arch"
     active: true
+

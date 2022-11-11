@@ -4,15 +4,15 @@ type decoderTrait struct {
 	decoder
 }
 
-func NewDecoderTrait(builder ModuleBuilder) *decoderTrait {
-	d := NewDecoder(builder)
+func NewDecoderTrait(c Constructor) *decoderTrait {
+	d := NewDecoder(c)
 	return &decoderTrait{decoder: *d}
 }
 
-func (d decoder) DecodeTrait(trait ModuleTrait) (r ModuleTrait) {
-	r.Dir = d.Decode(trait.Dir)
-	r.FileName = d.Decode(trait.FileName)
-	r.Name = d.Decode(trait.Name)
-	r.Template = d.Decode(trait.Template)
+func (d decoder) DecodeTrait(trait ModuleTrait, mt *ModelTrait) (r ModuleTrait) {
+	r.Dir = d.Decode(trait.Dir, mt)
+	r.FileName = d.Decode(trait.FileName, mt)
+	r.Name = d.Decode(trait.Name, mt)
+	r.Template = d.Decode(trait.Template, mt)
 	return
 }

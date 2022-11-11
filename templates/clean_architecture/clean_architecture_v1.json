@@ -1,112 +1,105 @@
 {
   "key": "ᬅᬓ᭄ᬱᬭ",
   "model_path": "example/model",
-  "result_path": "modules",
-  "module_name": "github.com/wirnat/axara",
+  "module_name": "github.com/wirnat/aksara-cli",
   "execute_models": ["Company"],
+  "meta": {
+    "result_path": "module",
+    "import_repository": "~module_name~/module/~module~/repository/~model_snake~_repository",
+    "import_request": 	"~module_name~/module/~module~/request/~model_snake~_request",
+    "import_response": 	"~module_name~/module/~module~/response",
+    "import_contextor":"~module_name~/example/infrastructure/contextor",
+    "import_usecase":  "~module_name~/module/~module~/~model_snake~_usecase",
+    "import_paginate": "~module_name~/template/clean_architecture/infrastructure/paginator",
+    "import_pagination": "~module_name~/example/infrastructure/paginator",
+    "import_model": "~module_name~/~model_path~"
+  },
   "module_traits": [
     {
       "name": "~model_snake~ repository interfaces",
       "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository",
       "template": "template/clean_architecture/repository_interfaces.text",
       "file_name": "~model_snake~.go",
-      "meta": {
-        "import_request": "~module_name~/~result_path~/~model_snake~/request/~model_snake~_request",
-        "import_contextor": "github.com/wirnat/axara/template/clean_architecture/infrastructure/contextor"
-      },
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ fetch param",
       "dir": "~result_path~/~model_snake~/request/~model_snake~_request",
       "template": "template/clean_architecture/param_request.text",
       "file_name": "~model_snake~_request.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ store param",
       "dir": "~result_path~/~model_snake~/request/~model_snake~_request",
       "template": "template/clean_architecture/param_store.text",
       "file_name": "~model_snake~_store.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ update param",
       "dir": "~result_path~/~model_snake~/request/~model_snake~_request",
       "template": "template/clean_architecture/param_update.text",
       "file_name": "~model_snake~_update.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ usecase interfaces",
       "dir": "~result_path~/~model_snake~/~model_snake~_usecase",
       "template": "template/clean_architecture/usecase_interfaces.text",
       "file_name": "~model_snake~_usecase.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ usecase",
       "dir": "~result_path~/~model_snake~/~model_snake~_usecase/~model_snake~_usecase_v1",
       "template": "template/clean_architecture/usecase.text",
       "file_name": "~model_snake~_usecase.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ repository",
       "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm",
       "template": "template/clean_architecture/repository_gorm.text",
       "file_name": "~model_snake~_gorm.go",
-      "meta": {
-        "import_paginate": "~module_name~/template/clean_architecture/infrastructure/paginator"
-      },
-      "active": false
+
+      "active": true
     },
     {
       "name": "~model_snake~ transaction",
       "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm",
       "template": "template/clean_architecture/transaction_gorm.text",
       "file_name": "~model_snake~_trx.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ filter",
       "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm",
       "template": "template/clean_architecture/filter_gorm.text",
       "file_name": "~model_snake~_filter.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ delivery",
       "dir": "~result_path~/~model_snake~/~model_snake~_delivery",
       "template": "template/clean_architecture/delivery.text",
       "file_name": "~model_snake~_delivery.go",
-      "meta": {},
-      "active": false
+      "active": true
     },
     {
       "name": "~model_snake~ response paginate",
       "dir": "~result_path~/~module~/response",
       "template": "template/clean_architecture/paginate_response.text",
       "file_name": "~model_snake~_paginate.go",
-      "meta": {
-        "import_pagination": "gitlab.com/aksaratech/barber-backend/infrastructure/paginator"
-      },
-      "active": false
+
+      "active": true
     },
     {
       "name": "~model_snake~ mock",
       "dir": "~result_path~/~module~/repository/~model_snake~_repository/~model_snake~_mock",
       "template": "template/clean_architecture/repository_mock.text",
       "file_name": "~model_snake~_mock.go",
-      "meta": {},
-      "active": false
+      "active": true
     }
   ]
 }

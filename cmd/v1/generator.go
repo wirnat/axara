@@ -26,7 +26,7 @@ func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Pu
 	Generate generate file base on declared variable on constructor
 */
 
-var ss = spinner.StartNew("Wait, Typing the code...")
+var ss = spinner.StartNew("Wait...")
 
 var yesForAll *bool
 
@@ -88,14 +88,18 @@ func (g generator) Generate(c Constructor) error {
 	this method executed only once when the generator executed
 */
 func (g generator) generateOnce(c Constructor) error {
+	decoder := NewDecoder(c)
 	for _, trait := range c.Traits {
 		if !trait.Active {
 			continue
 		}
+
 		if trait.Remote != "" {
-			f, err := ioutil.ReadDir(trait.Dir)
+			dirTarget := decoder.Decode(trait.Dir, nil)
+			remoteLink := decoder.Decode(trait.Remote, nil)
+			f, err := ioutil.ReadDir(dirTarget)
 			if len(f) < 1 {
-				err = g.Puller.Pull(trait.Remote, trait.Dir)
+				err = g.Puller.Pull(remoteLink, dirTarget)
 				if err != nil {
 					return err
 				}
@@ -138,11 +142,11 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 
 			//decode ~code~
-			decoderTrait := NewDecoderTrait(builder)
-			trait = decoderTrait.DecodeTrait(trait)
+			decoderTrait := NewDecoderTrait(builder.Constructor)
+			trait = decoderTrait.DecodeTrait(trait, &builder.ModelTrait)
 
-			decoder := NewDecoderBuilder(builder)
-			builder = decoder.DecodeBuilder()
+			decoder := NewDecoderBuilder(builder.Constructor)
+			builder = decoder.DecodeBuilder(builder)
 
 			err = os.MkdirAll(trait.Dir, os.ModePerm)
 			if err != nil {
@@ -177,7 +181,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 						ya := true
 						yesForAll = &ya
 					}
-					if input == "no" && input == "n" {
+					if input == "no" || input == "n" {
 						continue
 					}
 					if input != "yes" && input != "y" && input != "ya" {

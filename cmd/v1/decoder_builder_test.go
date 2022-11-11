@@ -63,7 +63,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 		{
 			name: "Embed must valid depend on the Decoder",
 			fields: fields{
-				Decoder: NewDecoder(builder),
+				Decoder: NewDecoder(builder.Constructor),
 			},
 			wantR: expected,
 		},
@@ -73,7 +73,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 			b := decoderBuilder{
 				Decoder: tt.fields.Decoder,
 			}
-			result := b.DecodeBuilder()
+			result := b.DecodeBuilder(builder)
 			assert.Equalf(t, tt.wantR, result, "DecodeBuilder()")
 		})
 	}
