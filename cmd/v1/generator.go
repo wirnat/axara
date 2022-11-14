@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/iancoleman/strcase"
-	"github.com/janeczku/go-spinner"
 	er "github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"io/ioutil"
@@ -26,8 +25,6 @@ func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Pu
 	Generate generate file base on declared variable on constructor
 */
 
-var ss = spinner.StartNew("Wait...")
-
 var yesForAll *bool
 
 func (g generator) Generate(c Constructor) error {
@@ -45,12 +42,11 @@ func (g generator) Generate(c Constructor) error {
 		return er.NothingTodo
 	}
 
+	ss.Title = "Read model path..."
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
 		return er.NoModelFound
 	}
-
-	fmt.Println("")
 
 	var mt []*ModelTrait
 	var mf []fs.FileInfo
@@ -80,6 +76,8 @@ func (g generator) Generate(c Constructor) error {
 		return err
 	}
 
+	ss.Stop()
+
 	return nil
 }
 
@@ -90,6 +88,8 @@ func (g generator) Generate(c Constructor) error {
 func (g generator) generateOnce(c Constructor) error {
 	decoder := NewDecoder(c)
 	for _, trait := range c.Traits {
+		ss.Title = fmt.Sprintf("Execute %v... ", trait.Name)
+
 		if !trait.Active {
 			continue
 		}
@@ -103,6 +103,7 @@ func (g generator) generateOnce(c Constructor) error {
 				if err != nil {
 					return err
 				}
+
 			}
 		} else {
 			//TODO: get builder and set to template
@@ -123,6 +124,8 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 	for i, t := range mt {
 		//generate file per module model
 		for _, trait := range c.ModuleTraits {
+			ss.Title = fmt.Sprintf("Build %v... ", trait.Name)
+
 			totalTask++
 			if !trait.Active {
 				continue
@@ -205,7 +208,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			if err != nil {
 				return err
 			}
-			fmt.Printf("	✅  %v\n", trait.Name)
+			fmt.Printf("	✅  %v \n", trait.Name)
 			successTask++
 		}
 	}
@@ -213,7 +216,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 		return er.NoModelCanExecute
 	}
 
-	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= \n", successTask, totalTask)
+	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= ", successTask, totalTask)
 
 	return nil
 }

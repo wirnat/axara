@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/dgraph-io/badger"
 	"github.com/google/go-github/github"
-	"github.com/janeczku/go-spinner"
 	"github.com/wirnat/axara/cmd/v1/key"
 	"golang.org/x/oauth2"
 	"io/ioutil"
@@ -148,7 +147,7 @@ func (g gitPuller) downloadContents(content *github.RepositoryContent, localPath
 	}
 	defer rc.Close()
 
-	spinner.StartNew(fmt.Sprintf("Download %v... ", localPath))
+	ss.Title = fmt.Sprintf("Download %v... ", localPath)
 
 	dataB, err := ioutil.ReadAll(rc)
 	if err != nil {
@@ -176,7 +175,7 @@ func (g gitPuller) downloadContents(content *github.RepositoryContent, localPath
 	}
 
 	if n != *content.Size {
-		fmt.Printf("number of bytes differ, %d vs %d\n", n, *content.Size)
+		fmt.Printf("number of bytes differ, %d vs %d", n, *content.Size)
 	}
 }
 

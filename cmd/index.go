@@ -26,7 +26,7 @@ var generatorCmd = &cobra.Command{
 	},
 }
 
-const VERSION = "v1.0.2"
+const VERSION = "v1.0.3"
 
 var checkVersion = &cobra.Command{
 	Use:   "version",
@@ -39,7 +39,7 @@ var checkVersion = &cobra.Command{
 var setter = &cobra.Command{
 	Use:   "set",
 	Short: "Set Configuration",
-	Long:  "--git-key \n",
+	Long:  "--git-key ",
 	Run: func(cmd *cobra.Command, args []string) {
 		gitkey, err := cmd.Flags().GetString(key.GitKey)
 		if err != nil {

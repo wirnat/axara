@@ -1,9 +1,0 @@
-package {{.ModelSnake}}_repository
-
-import "context"
-import "{{.Meta.import_param}}"
-import "{{.Meta.import_response}}"
-
-type {{.Model}}Paginate interface {
-	Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) (response.{{.Model}}Paginate, error)
-}
