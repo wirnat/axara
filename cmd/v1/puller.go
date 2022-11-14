@@ -5,9 +5,12 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
+	"github.com/dgraph-io/badger"
 	"github.com/google/go-github/github"
+	"github.com/wirnat/axara/cmd/v1/key"
 	"golang.org/x/oauth2"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,7 +24,6 @@ type Puller interface {
 
 const (
 	basePath = ""
-	token    = "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"
 )
 
 type gitPuller struct {
@@ -30,19 +32,42 @@ type gitPuller struct {
 
 func NewGitPuller() (g *gitPuller) {
 	g = &gitPuller{}
-	transport := &oauth2.Transport{
-		Source: oauth2.StaticTokenSource(
-			&oauth2.Token{
-				AccessToken: token,
-			},
-		),
-		Base: &transportHeaders{
-			modifiedSince: "",
-		},
+
+	opts := badger.DefaultOptions(key.Storage)
+	opts.Logger = nil
+
+	db, err := badger.Open(opts)
+	if err != nil {
+		log.Fatal(err)
 	}
-	g.client = github.NewClient(&http.Client{
-		Transport: transport,
+	defer db.Close()
+	err = db.View(func(txn *badger.Txn) error {
+		token, err := txn.Get([]byte(key.GitKey))
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = token.Value(func(val []byte) error {
+			transport := &oauth2.Transport{
+				Source: oauth2.StaticTokenSource(
+					&oauth2.Token{
+						AccessToken: string(val),
+					},
+				),
+				Base: &transportHeaders{
+					modifiedSince: "",
+				},
+			}
+			g.client = github.NewClient(&http.Client{
+				Transport: transport,
+			})
+			return nil
+		})
+		return nil
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return
 }
 
@@ -85,7 +110,6 @@ func (g gitPuller) getContent(cr cred) error {
 		fmt.Println(err)
 		return err
 	}
-
 	for _, c := range directoryContent {
 		local := filepath.Join(basePath, *c.Path)
 		switch *c.Type {
@@ -105,6 +129,7 @@ func (g gitPuller) getContent(cr cred) error {
 		case "dir":
 			cr.path = *c.Path
 			g.getContent(cr)
+
 		}
 	}
 	return nil
@@ -121,6 +146,8 @@ func (g gitPuller) downloadContents(content *github.RepositoryContent, localPath
 		return
 	}
 	defer rc.Close()
+
+	ss.Title = fmt.Sprintf("Download %v... ", localPath)
 
 	dataB, err := ioutil.ReadAll(rc)
 	if err != nil {
@@ -148,7 +175,7 @@ func (g gitPuller) downloadContents(content *github.RepositoryContent, localPath
 	}
 
 	if n != *content.Size {
-		fmt.Printf("number of bytes differ, %d vs %d\n", n, *content.Size)
+		fmt.Printf("number of bytes differ, %d vs %d", n, *content.Size)
 	}
 }
 

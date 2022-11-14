@@ -7,7 +7,7 @@ import (
 
 func Test_decoder_Decode(t *testing.T) {
 	type fields struct {
-		Builder ModuleBuilder
+		Constructor Constructor
 	}
 	type args struct {
 		code []string
@@ -47,7 +47,7 @@ func Test_decoder_Decode(t *testing.T) {
 		{
 			name: "All decoded code must match with builder",
 			fields: fields{
-				Builder: builder,
+				Constructor: builder.Constructor,
 			},
 			args: args{
 				code: []string{
@@ -76,10 +76,10 @@ func Test_decoder_Decode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := decoder{
-				Builder: tt.fields.Builder,
+				Construct: tt.fields.Constructor,
 			}
 			for i, c := range tt.args.code {
-				decoded := d.Decode(c)
+				decoded := d.Decode(c, &builder.ModelTrait)
 				assert.Equal(t, tt.wantEncoded[i], decoded)
 			}
 		})

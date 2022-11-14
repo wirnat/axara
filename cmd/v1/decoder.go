@@ -6,30 +6,31 @@ import (
 )
 
 type Decoder interface {
-	GetBuilder() ModuleBuilder
-	Decode(code string) (encoded string)
+	Decode(code string, mt *ModelTrait) (encoded string)
 }
 
 type decoder struct {
-	Builder ModuleBuilder
+	Construct Constructor
 }
 
-func (d decoder) GetBuilder() ModuleBuilder {
-	return d.Builder
+func NewDecoder(construct Constructor) *decoder {
+	return &decoder{Construct: construct}
 }
 
-func NewDecoder(builder ModuleBuilder) *decoder {
-	return &decoder{Builder: builder}
-}
-
-func (d decoder) Decode(code string) (encoded string) {
-	encoded = strings.ReplaceAll(code, "~model_path~", d.Builder.ModelPath)
-	encoded = strings.ReplaceAll(encoded, "~model_snake~", d.Builder.ModelSnake)
-	encoded = strings.ReplaceAll(encoded, "~model~", d.Builder.Model)
-	encoded = strings.ReplaceAll(encoded, "~model_camel~", d.Builder.ModelCamel)
-	encoded = strings.ReplaceAll(encoded, "~module_name~", d.Builder.ModuleName)
-	encoded = strings.ReplaceAll(encoded, "~model_path~", d.Builder.ModelPath)
-	for key, val := range d.Builder.Meta {
+/*
+	Decode parsing the ~~ code
+*/
+func (d decoder) Decode(code string, mt *ModelTrait) (encoded string) {
+	encoded = code
+	if mt != nil {
+		encoded = strings.ReplaceAll(encoded, "~model_snake~", mt.ModelSnake)
+		encoded = strings.ReplaceAll(encoded, "~model~", mt.Model)
+		encoded = strings.ReplaceAll(encoded, "~model_camel~", mt.ModelCamel)
+	}
+	encoded = strings.ReplaceAll(encoded, "~model_path~", d.Construct.ModelPath)
+	encoded = strings.ReplaceAll(encoded, "~module_name~", d.Construct.ModuleName)
+	encoded = strings.ReplaceAll(encoded, "~model_path~", d.Construct.ModelPath)
+	for key, val := range d.Construct.Meta {
 		meta := fmt.Sprintf("~%v~", key)
 		encoded = strings.ReplaceAll(encoded, meta, val)
 	}

@@ -14,25 +14,14 @@ meta:
   import_paginate: "~module_name~/template/clean_architecture/infrastructure/paginator"
   import_pagination: "~module_name~/example/infrastructure/paginator"
   import_model: "~module_name~/~model_path~"
+  tmt_dir: "templates/clean_architecture"
 
 include_module_traits:
   - example/module_trait.yaml
 
-module_traits:
-  - name: "~model_snake~ repository interfaces"
-    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
-    template: templates/tmt/repository_interfaces.text
-    file_name: "~model_snake~.go"
-    active: false
-
-  - name: "~model_snake~ fetch param"
-    dir: "~result_path~/~model_snake~/request/~model_snake~_request"
-    template: templates/tmt/param_request.text
-    file_name: "~model_snake~_request.go"
-    active: true
-
 traits:
-  - name: "get infrastructure"
-    dir: "templates"
+  - name: "get templates"
+    dir: "~tmt_dir~"
     remote: "github.com/wirnat/template-aksara-cli-clean-arch"
     active: true
+

@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"errors"
 	"fmt"
-	"github.com/wirnat/axara/cmd/v1/errors"
+	"github.com/iancoleman/strcase"
+	er "github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -22,26 +24,33 @@ func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Pu
 /*
 	Generate generate file base on declared variable on constructor
 */
+
+var yesForAll *bool
+
 func (g generator) Generate(c Constructor) error {
+	defer ss.Stop()
+	ya := false
+	yesForAll = &ya
+
 	if c.Key != "ᬅᬓ᭄ᬱᬭ" {
-		return errors.InvalidKey
+		return er.InvalidKey
 	}
 	if c.ExecuteModels == nil {
-		return errors.NothingTodo
+		return er.NothingTodo
 	}
 	if c.ModuleTraits == nil {
-		return errors.NothingTodo
+		return er.NothingTodo
 	}
 
+	ss.Title = "Read model path..."
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
-		return errors.NoModelFound
+		return er.NoModelFound
 	}
 
 	var mt []*ModelTrait
 	var mf []fs.FileInfo
 	//get meta from model and get scanned model trait
-	fmt.Println("Collect meta from scanned model...")
 	for _, file := range files {
 		if file.IsDir() {
 			continue
@@ -67,6 +76,8 @@ func (g generator) Generate(c Constructor) error {
 		return err
 	}
 
+	ss.Stop()
+
 	return nil
 }
 
@@ -75,17 +86,24 @@ func (g generator) Generate(c Constructor) error {
 	this method executed only once when the generator executed
 */
 func (g generator) generateOnce(c Constructor) error {
+	decoder := NewDecoder(c)
 	for _, trait := range c.Traits {
+		ss.Title = fmt.Sprintf("Execute %v... ", trait.Name)
+
 		if !trait.Active {
 			continue
 		}
+
 		if trait.Remote != "" {
-			f, err := ioutil.ReadDir(trait.Dir)
+			dirTarget := decoder.Decode(trait.Dir, nil)
+			remoteLink := decoder.Decode(trait.Remote, nil)
+			f, err := ioutil.ReadDir(dirTarget)
 			if len(f) < 1 {
-				err = g.Puller.Pull(trait.Remote, trait.Dir)
+				err = g.Puller.Pull(remoteLink, dirTarget)
 				if err != nil {
 					return err
 				}
+
 			}
 		} else {
 			//TODO: get builder and set to template
@@ -106,6 +124,8 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 	for i, t := range mt {
 		//generate file per module model
 		for _, trait := range c.ModuleTraits {
+			ss.Title = fmt.Sprintf("Build %v... ", trait.Name)
+
 			totalTask++
 			if !trait.Active {
 				continue
@@ -125,11 +145,11 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 
 			//decode ~code~
-			decoderTrait := NewDecoderTrait(builder)
-			trait = decoderTrait.DecodeTrait(trait)
+			decoderTrait := NewDecoderTrait(builder.Constructor)
+			trait = decoderTrait.DecodeTrait(trait, &builder.ModelTrait)
 
-			decoder := NewDecoderBuilder(builder)
-			builder = decoder.DecodeBuilder()
+			decoder := NewDecoderBuilder(builder.Constructor)
+			builder = decoder.DecodeBuilder(builder)
 
 			err = os.MkdirAll(trait.Dir, os.ModePerm)
 			if err != nil {
@@ -144,6 +164,35 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 
 			generatedFile := fmt.Sprintf("%v/%v", trait.Dir, trait.FileName)
+
+			if !*yesForAll {
+				if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
+					var input string
+				Scan:
+					{
+						ss.Stop()
+						fmt.Println(trait.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
+						_, err := fmt.Scanln(&input)
+						if err != nil {
+							fmt.Printf("	something is wrong")
+							continue
+						}
+					}
+
+					input = strcase.ToSnake(input)
+					if input == "ya" {
+						ya := true
+						yesForAll = &ya
+					}
+					if input == "no" || input == "n" {
+						continue
+					}
+					if input != "yes" && input != "y" && input != "ya" {
+						goto Scan
+					}
+				}
+			}
+
 			fileTrait, err := os.Create(generatedFile)
 			if err != nil {
 				fmt.Printf("	❌ create file failed")
@@ -159,15 +208,15 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			if err != nil {
 				return err
 			}
-			fmt.Printf("	✅  %v\n", trait.Name)
+			fmt.Printf("	✅  %v \n", trait.Name)
 			successTask++
 		}
 	}
 	if len(mt) < 1 {
-		return errors.NoModelCanExecute
+		return er.NoModelCanExecute
 	}
 
-	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= \n", successTask, totalTask)
+	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= ", successTask, totalTask)
 
 	return nil
 }

@@ -292,6 +292,8 @@ func Test_generator_Generate(t *testing.T) {
 				ReaderMeta:    NewReaderMeta(),
 				Puller:        NewGitPuller(),
 			}
+			x := true
+			yesForAll = &x
 			err := g.Generate(tt.args.c)
 			assert.Equal(t, tt.wantErr, err)
 			if tt.fun != nil {
