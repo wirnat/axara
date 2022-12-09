@@ -33,7 +33,8 @@ type gitPuller struct {
 func NewGitPuller() (g *gitPuller) {
 	g = &gitPuller{}
 
-	opts := badger.DefaultOptions(key.Storage)
+	storage := "/Users/iturban/.axara"
+	opts := badger.DefaultOptions(storage)
 	opts.Logger = nil
 
 	db, err := badger.Open(opts)
@@ -120,7 +121,6 @@ func (g gitPuller) getContent(cr cred) error {
 				if err1 == nil {
 					sha := calculateGitSHA1(b)
 					if *c.SHA == hex.EncodeToString(sha) {
-						fmt.Println("no need to update this file, the SHA is the same")
 						continue
 					}
 				}
@@ -151,31 +151,30 @@ func (g gitPuller) downloadContents(content *github.RepositoryContent, localPath
 
 	dataB, err := ioutil.ReadAll(rc)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
 	err = os.MkdirAll(targetDir+"/"+filepath.Dir(localPath), os.ModePerm)
 	if err != nil {
-		fmt.Printf("	❌ create directory failed")
+		fmt.Println(fmt.Println("	❌ create directory failed"))
 		return
 	}
 
 	fl, err := os.Create(targetDir + "/" + localPath)
 	if err != nil {
-		fmt.Printf("	❌ create file failed")
+		fmt.Println(fmt.Println("	❌ create file failed"))
 		return
 	}
 	defer fl.Close()
 
 	n, err := fl.Write(dataB)
 	if err != nil {
-		fmt.Printf("	❌ write file failed")
+		fmt.Println(fmt.Println("	❌ write file failed"))
 		return
 	}
 
 	if n != *content.Size {
-		fmt.Printf("number of bytes differ, %d vs %d", n, *content.Size)
+		fmt.Println(fmt.Sprintf("number of bytes differ, %d vs %d", n, *content.Size))
 	}
 }
 

@@ -40,6 +40,7 @@ func NewConstructor(p string) (b *Constructor, err error) {
 	return
 }
 
+//marshal get data from include yaml file
 func marshal(p string) (c *Constructor, err error) {
 	targetConfig := fmt.Sprintf("%v", p)
 	data, errFile := os.Open(targetConfig)

@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"text/template"
 )
 
@@ -28,7 +29,7 @@ func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Pu
 var yesForAll *bool
 
 func (g generator) Generate(c Constructor) error {
-	defer ss.Stop()
+	//defer ss.Stop()
 	ya := false
 	yesForAll = &ya
 
@@ -76,7 +77,7 @@ func (g generator) Generate(c Constructor) error {
 		return err
 	}
 
-	ss.Stop()
+	//ss.Stop()
 
 	return nil
 }
@@ -94,19 +95,58 @@ func (g generator) generateOnce(c Constructor) error {
 			continue
 		}
 
-		if trait.Remote != "" {
+		if len(trait.CMD) > 1 {
 			dirTarget := decoder.Decode(trait.Dir, nil)
-			remoteLink := decoder.Decode(trait.Remote, nil)
-			f, err := ioutil.ReadDir(dirTarget)
-			if len(f) < 1 {
-				err = g.Puller.Pull(remoteLink, dirTarget)
-				if err != nil {
-					return err
-				}
 
+			if _, err := os.Stat(dirTarget); errors.Is(err, os.ErrNotExist) {
+				cmd := exec.Command(trait.CMD[0], trait.CMD[1:]...)
+				err = cmd.Run()
+				if err != nil {
+					return fmt.Errorf("invalid command")
+				}
 			}
 		} else {
-			//TODO: get builder and set to template
+			constructorDecoded := Constructor{
+				GitAccessKey:        decoder.Decode(c.GitAccessKey, nil),
+				Key:                 decoder.Decode(c.Key, nil),
+				ModelPath:           decoder.Decode(c.ModelPath, nil),
+				ResultPath:          decoder.Decode(c.ResultPath, nil),
+				ModuleName:          decoder.Decode(c.ModuleName, nil),
+				ModuleTraits:        nil,
+				Meta:                nil,
+				IncludeModuleTraits: c.IncludeModuleTraits,
+				IncludeTraits:       c.IncludeTraits,
+				Traits:              nil,
+			}
+
+			for _, moduleTrait := range c.ModuleTraits {
+				moduleTrait = ModuleTrait{
+					Name:     decoder.Decode(moduleTrait.Name, nil),
+					Dir:      decoder.Decode(moduleTrait.Dir, nil),
+					FileName: decoder.Decode(moduleTrait.FileName, nil),
+					Template: decoder.Decode(moduleTrait.Template, nil),
+					Active:   moduleTrait.Active,
+					CMD:      moduleTrait.CMD,
+				}
+				constructorDecoded.ModuleTraits = append(constructorDecoded.ModuleTraits, moduleTrait)
+			}
+
+			for key, val := range constructorDecoded.Meta {
+				constructorDecoded.Meta[key] = decoder.Decode(val, nil)
+			}
+
+			for _, t := range constructorDecoded.Traits {
+				t = ModuleTrait{
+					Name:     decoder.Decode(t.Name, nil),
+					Dir:      decoder.Decode(t.Dir, nil),
+					FileName: decoder.Decode(t.FileName, nil),
+					Template: decoder.Decode(t.Template, nil),
+					Active:   t.Active,
+					CMD:      t.CMD,
+				}
+				constructorDecoded.Traits = append(constructorDecoded.Traits, t)
+			}
+
 		}
 	}
 
@@ -153,13 +193,15 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 
 			err = os.MkdirAll(trait.Dir, os.ModePerm)
 			if err != nil {
-				fmt.Printf("	❌ create directory failed")
+				fmt.Println("	❌ create directory failed")
 				continue
 			}
 
-			tmt, err := template.ParseFiles(trait.Template)
+			templateDir := decoder.Decode(trait.Template, nil)
+
+			tmt, err := template.ParseFiles(templateDir)
 			if err != nil {
-				fmt.Printf("	❌ read template failed")
+				fmt.Println("	❌ read template failed, " + templateDir)
 				continue
 			}
 
@@ -174,7 +216,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 						fmt.Println(trait.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
 						_, err := fmt.Scanln(&input)
 						if err != nil {
-							fmt.Printf("	something is wrong")
+							fmt.Println("	something is wrong")
 							continue
 						}
 					}
@@ -195,20 +237,20 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 
 			fileTrait, err := os.Create(generatedFile)
 			if err != nil {
-				fmt.Printf("	❌ create file failed")
+				fmt.Println("	❌ create file failed")
 				continue
 			}
 
 			err = tmt.Execute(fileTrait, builder)
 			if err != nil {
-				fmt.Printf("	❌ compile template failed")
+				fmt.Println("	❌ compile template failed")
 				continue
 			}
 			err = fileTrait.Close()
 			if err != nil {
 				return err
 			}
-			fmt.Printf("	✅  %v \n", trait.Name)
+			fmt.Println(fmt.Sprintf("	✅  %v \n", trait.Name))
 			successTask++
 		}
 	}
@@ -216,7 +258,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 		return er.NoModelCanExecute
 	}
 
-	fmt.Printf("====== Generate Module Trait Files , %v/%v ======= ", successTask, totalTask)
+	fmt.Println(fmt.Sprintf("====== Generate Module Trait Files , %v/%v ======= ", successTask, totalTask))
 
 	return nil
 }

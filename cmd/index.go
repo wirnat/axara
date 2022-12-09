@@ -45,7 +45,7 @@ var setter = &cobra.Command{
 		if err != nil {
 			logrus.Fatal(err)
 		} else {
-			opts := badger.DefaultOptions(key.Storage)
+			opts := badger.DefaultOptions(key.Storage())
 			opts.Logger = nil
 
 			db, err := badger.Open(opts)
@@ -78,7 +78,6 @@ var getter = &cobra.Command{
 
 func init() {
 	rootCmd.PersistentFlags().String("git-key", "", "set git access token, ex: set --git-key your-token")
-
 	rootCmd.AddCommand(generatorCmd)
 	rootCmd.AddCommand(checkVersion)
 	rootCmd.AddCommand(getter)

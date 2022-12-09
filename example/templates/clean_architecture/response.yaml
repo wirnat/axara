@@ -1,0 +1,8 @@
+
+module_traits:
+    - name: "~model_snake~ response paginate"
+      dir: "~result_path~/~module~/response"
+      template: ~template~/paginate_response.text
+      file_name: "~model_snake~_paginate.go"
+      active: true
+

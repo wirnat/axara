@@ -1,0 +1,30 @@
+module_traits:
+#  - name: "~model_snake~ repository"
+#    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm"
+#    template: ~template~/repository_gorm.text
+#    file_name: "~model_snake~_gorm.g.go"
+#    active: true
+#
+#  - name: "~model_snake~ transaction"
+#    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm"
+#    template: ~template~/transaction_gorm.text
+#    file_name: "~model_snake~_trx.g.go"
+#    active: true
+#
+#  - name: "~model_snake~ filter"
+#    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository/~model_snake~_gorm"
+#    template: ~template~/filter_gorm.text
+#    file_name: "~model_snake~_filter.g.go"
+#    active: true
+
+  - name: "~model_snake~ mock"
+    dir: "~result_path~/~module~/repository/~model_snake~_repository/~model_snake~_mock"
+    template: ~template~/repository_mock.text
+    file_name: "~model_snake~_mock.g.go"
+    active: true
+
+#  - name: "~model_snake~ repository interfaces"
+#    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
+#    template: ~template~/repository_interfaces.text
+#    file_name: "~model_snake~.g.go"
+#    active: true

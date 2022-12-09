@@ -9,6 +9,6 @@ type Branch struct {
 
 /*
 	~model~ Branch
-	~module~ branch
+	~module branch
 	~end_model~
 */

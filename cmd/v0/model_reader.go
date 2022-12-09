@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/iancoleman/strcase"
 	"github.com/sirupsen/logrus"
-	"github.com/wirnat/axara/util/stringtor"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -63,7 +62,7 @@ func (r modelScanner) Scan() (bl *Blueprint, err error) {
 				modelName = field[1]
 
 				trait.ModelTrait = *(NewModelTraitFromFile(file, modelName, r.Config))
-				trait.ModelSnake = stringtor.ToSnakeCase(modelName)
+				trait.ModelSnake = strcase.ToSnake(modelName)
 				trait.ModelCamel = strcase.ToLowerCamel(modelName)
 			}
 			//find other model meta in model file

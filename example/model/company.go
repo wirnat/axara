@@ -7,6 +7,6 @@ type Company struct {
 
 /*
 	~model~ Company
-	~module~ company
+	~module company
 	~end_model~
 */
