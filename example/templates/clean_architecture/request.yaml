@@ -1,0 +1,21 @@
+
+module_traits:
+    - name: "~model_snake~ store param"
+      dir: "~result_path~/~model_snake~/request/~model_snake~_request"
+      template: ~template~/param_store.text
+      file_name: "~model_snake~_store.go"
+      active: true
+
+    - name: "~model_snake~ update param"
+      dir: "~result_path~/~model_snake~/request/~model_snake~_request"
+      template: ~template~/param_update.text
+      file_name: "~model_snake~_update.go"
+      active: true
+
+    - name: "~model_snake~ fetch param"
+      dir: "~result_path~/~model_snake~/request/~model_snake~_request"
+      template: ~template~/param_request.text
+      file_name: "~model_snake~_request.go"
+      active: true
+
+

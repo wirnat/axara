@@ -3,7 +3,6 @@ package v1
 import (
 	"bufio"
 	"github.com/iancoleman/strcase"
-	"github.com/wirnat/axara/util/stringtor"
 	"io"
 	"io/ioutil"
 	"os"
@@ -38,7 +37,7 @@ func (r *ModelTrait) getModelField(fl io.Reader, config Constructor) error {
 			line := strings.Fields(scanner.Text())
 			isPtr := strings.Contains(line[1], "*")
 			mf := ModelField{
-				Json:  stringtor.ToSnakeCase(line[0]),
+				Json:  strcase.ToSnake(line[0]),
 				Name:  line[0],
 				Type:  strings.Replace(line[1], "*", "", 1),
 				IsPtr: isPtr,
@@ -61,7 +60,7 @@ func (r *ModelTrait) getModelField(fl io.Reader, config Constructor) error {
 }
 
 func (r *ModelTrait) getEmbeddedModelField(modelName string, config Constructor) error {
-	modelName = stringtor.ToSnakeCase(modelName)
+	modelName = strcase.ToSnake(modelName)
 	//TODO: search file name base on model name
 	files, err := ioutil.ReadDir(config.ModelPath)
 	if err != nil {
@@ -94,7 +93,7 @@ func (r *ModelTrait) getEmbeddedModelField(modelName string, config Constructor)
 func NewModelTraitFromFile(fl io.Reader, modelName string, config Constructor) *ModelTrait {
 	m := &ModelTrait{
 		Model:      modelName,
-		ModelSnake: stringtor.ToSnakeCase(modelName),
+		ModelSnake: strcase.ToSnake(modelName),
 		ModelCamel: strcase.ToLowerCamel(modelName),
 	}
 

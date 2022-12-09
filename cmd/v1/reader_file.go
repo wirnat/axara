@@ -2,7 +2,6 @@ package v1
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/wirnat/axara/cmd/v1/errors"
 	"io/fs"
 	"os"
@@ -46,7 +45,6 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 			modelOpen = true
 			modelFields := strings.Fields(line)
 			if len(modelFields) != 2 {
-				fmt.Println("invalid tag")
 				return nil, errors.InvalidModelFlag
 			}
 			modelName := modelFields[1]
