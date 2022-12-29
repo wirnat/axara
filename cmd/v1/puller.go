@@ -33,7 +33,7 @@ type gitPuller struct {
 func NewGitPuller() (g *gitPuller) {
 	g = &gitPuller{}
 
-	storage := "/Users/iturban/.axara"
+	storage := "/.axara"
 	opts := badger.DefaultOptions(storage)
 	opts.Logger = nil
 

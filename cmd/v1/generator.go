@@ -191,22 +191,22 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			decoder := NewDecoderBuilder(builder.Constructor)
 			builder = decoder.DecodeBuilder(builder)
 
-			err = os.MkdirAll(trait.Dir, os.ModePerm)
+			err = os.MkdirAll(decoder.Decode(trait.Dir, &builder.ModelTrait), os.ModePerm)
 			if err != nil {
-				fmt.Println("	❌ create directory failed")
+				fmt.Println("	❌" + err.Error())
 				continue
 			}
 
-			templateDir := decoder.Decode(trait.Template, nil)
+			templateDir := decoder.Decode(trait.Template, &builder.ModelTrait)
 
 			tmt, err := template.ParseFiles(templateDir)
 			if err != nil {
-				fmt.Println("	❌ read template failed, " + templateDir)
+				fmt.Println("❌ " + err.Error())
 				continue
 			}
 
 			generatedFile := fmt.Sprintf("%v/%v", trait.Dir, trait.FileName)
-
+			generatedFile = decoder.Decode(generatedFile, &builder.ModelTrait)
 			if !*yesForAll {
 				if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
 					var input string
@@ -237,13 +237,13 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 
 			fileTrait, err := os.Create(generatedFile)
 			if err != nil {
-				fmt.Println("	❌ create file failed")
+				fmt.Println("	❌ " + err.Error())
 				continue
 			}
 
 			err = tmt.Execute(fileTrait, builder)
 			if err != nil {
-				fmt.Println("	❌ compile template failed")
+				fmt.Println("	❌ " + err.Error())
 				continue
 			}
 			err = fileTrait.Close()
