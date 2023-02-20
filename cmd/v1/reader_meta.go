@@ -29,6 +29,7 @@ func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor) (meta map[string]st
 	if err != nil {
 		return nil, err
 	}
+	defer fileE.Close()
 
 	//Collect all data from executed model model
 	scanner := bufio.NewScanner(fileE)
