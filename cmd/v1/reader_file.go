@@ -27,6 +27,8 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 		return nil, err
 	}
 
+	defer fileE.Close()
+
 	//Collect all data from executed model model
 	scanner := bufio.NewScanner(fileE)
 	modelOpen := false
@@ -75,9 +77,5 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 		return nil, errors.NoEndModelFound
 	}
 
-	err = fileE.Close()
-	if err != nil {
-		return nil, err
-	}
 	return
 }
