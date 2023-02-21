@@ -15,11 +15,10 @@ import (
 type generator struct {
 	GetModelTrait FileModelTrait
 	ReaderMeta    ReaderMeta
-	Puller        Puller
 }
 
-func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, puller Puller) *generator {
-	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta, Puller: puller}
+func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta) *generator {
+	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta}
 }
 
 /*

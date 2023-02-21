@@ -2,6 +2,7 @@ package v1
 
 import (
 	"bufio"
+	plural "github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"io"
 	"io/ioutil"
@@ -15,6 +16,7 @@ type ModelTrait struct {
 	Model       string       `json:"model"`
 	ModelSnake  string       `json:"model_snake"`
 	ModelCamel  string       `json:"model_camel"`
+	ModelPlural string       `json:"model_plural"`
 }
 
 //getModelField get model fields
@@ -92,9 +94,10 @@ func (r *ModelTrait) getEmbeddedModelField(modelName string, config Constructor)
 
 func NewModelTraitFromFile(fl io.Reader, modelName string, config Constructor) *ModelTrait {
 	m := &ModelTrait{
-		Model:      modelName,
-		ModelSnake: strcase.ToSnake(modelName),
-		ModelCamel: strcase.ToLowerCamel(modelName),
+		Model:       modelName,
+		ModelSnake:  strcase.ToSnake(modelName),
+		ModelCamel:  strcase.ToLowerCamel(modelName),
+		ModelPlural: plural.NewClient().Plural(modelName),
 	}
 
 	m.getModelField(fl, config)
