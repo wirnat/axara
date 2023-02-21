@@ -70,7 +70,6 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 				}
 			}
 		}
-
 	}
 
 	if modelOpen && !modelClose {

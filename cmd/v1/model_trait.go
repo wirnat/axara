@@ -97,7 +97,7 @@ func NewModelTraitFromFile(fl io.Reader, modelName string, config Constructor) *
 		Model:       modelName,
 		ModelSnake:  strcase.ToSnake(modelName),
 		ModelCamel:  strcase.ToLowerCamel(modelName),
-		ModelPlural: plural.NewClient().Plural(modelName),
+		ModelPlural: strings.ToLower(plural.NewClient().Plural(modelName)),
 	}
 
 	m.getModelField(fl, config)
