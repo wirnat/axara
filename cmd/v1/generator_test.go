@@ -300,7 +300,6 @@ func Test_generator_Generate(t *testing.T) {
 			g := generator{
 				GetModelTrait: NewModelFileReader(),
 				ReaderMeta:    NewReaderMeta(),
-				Puller:        NewGitPuller(),
 			}
 			err = g.Generate(tt.args.c)
 			assert.Equal(t, tt.wantErr, err)
@@ -393,7 +392,6 @@ func Test_generator_generateOnce(t *testing.T) {
 			g := generator{
 				GetModelTrait: tt.fields.GetModelTrait,
 				ReaderMeta:    tt.fields.ReaderMeta,
-				Puller:        tt.fields.Puller,
 			}
 			err := g.generateOnce(tt.args.c)
 			assert.Nil(t, err)
