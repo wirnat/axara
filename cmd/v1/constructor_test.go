@@ -37,6 +37,14 @@ func Test_parser(t *testing.T) {
 			"testing_env/module_trait.yaml",
 		},
 		ResultPath: "",
+		Models: map[string]map[string]interface{}{
+			"User": {
+				"module": "user",
+			},
+			"Company": {
+				"module": "company",
+			},
+		},
 	}
 
 	conJSON := &Constructor{
@@ -70,6 +78,14 @@ func Test_parser(t *testing.T) {
 			"testing_env/module_trait.json",
 		},
 		ResultPath: "",
+		Models: map[string]map[string]interface{}{
+			"User": {
+				"module": "user",
+			},
+			"Company": {
+				"module": "company",
+			},
+		},
 	}
 
 	t.Run("Match to Constructor struct", func(t *testing.T) {
