@@ -11,10 +11,9 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 	}
 	builder := ModuleBuilder{
 		Constructor: Constructor{
-			Key:           "ᬅᬓ᭄ᬱᬭ",
-			ModelPath:     "branch",
-			ModuleName:    "github.com",
-			ExecuteModels: []string{"Branch"},
+			Key:        "ᬅᬓ᭄ᬱᬭ",
+			ModelPath:  "branch",
+			ModuleName: "github.com",
 			ModuleTraits: []ModuleTrait{
 				{
 					Name: "repository", Dir: "testing_env/modules/~meta~/~model_snake~/~model~", FileName: "branch.go",
@@ -34,10 +33,9 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 	}
 	expected := ModuleBuilder{
 		Constructor: Constructor{
-			Key:           "ᬅᬓ᭄ᬱᬭ",
-			ModelPath:     "branch",
-			ModuleName:    "github.com",
-			ExecuteModels: []string{"Branch"},
+			Key:        "ᬅᬓ᭄ᬱᬭ",
+			ModelPath:  "branch",
+			ModuleName: "github.com",
 			ModuleTraits: []ModuleTrait{
 				{
 					Name: "repository", Dir: "testing_env/modules/test/branch/Branch", FileName: "branch.go",

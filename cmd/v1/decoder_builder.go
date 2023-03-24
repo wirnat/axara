@@ -13,19 +13,18 @@ func (b decoderBuilder) DecodeBuilder(builder ModuleBuilder) (r ModuleBuilder) {
 	r = ModuleBuilder{
 		ModelTrait: builder.ModelTrait,
 		Constructor: Constructor{
-			Key:           b.Decode(builder.Key, &builder.ModelTrait),
-			ModelPath:     b.Decode(builder.ModelPath, &builder.ModelTrait),
-			ResultPath:    b.Decode(builder.ResultPath, &builder.ModelTrait),
-			ModuleName:    b.Decode(builder.ModuleName, &builder.ModelTrait),
-			ExecuteModels: nil,
-			ModuleTraits:  nil,
-			Meta:          map[string]string{},
+			Key:          b.Decode(builder.Key, &builder.ModelTrait),
+			ModelPath:    b.Decode(builder.ModelPath, &builder.ModelTrait),
+			ResultPath:   b.Decode(builder.ResultPath, &builder.ModelTrait),
+			ModuleName:   b.Decode(builder.ModuleName, &builder.ModelTrait),
+			ModuleTraits: nil,
+			Meta:         map[string]string{},
 		},
 	}
 
-	for _, e := range builder.ExecuteModels {
-		r.ExecuteModels = append(r.ExecuteModels, b.Decode(e, &builder.ModelTrait))
-	}
+	//for _, e := range builder.ExecuteModels {
+	//	r.ExecuteModels = append(r.ExecuteModels, b.Decode(e, &builder.ModelTrait))
+	//}
 
 	for _, trait := range builder.ModuleTraits {
 		moduleTrait := ModuleTrait{

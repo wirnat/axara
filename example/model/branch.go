@@ -7,8 +7,4 @@ type Branch struct {
 	Description *string `json:"description"`
 }
 
-/*
-	~model~ Branch
-	~module branch
-	~end_model~
-*/
+//@Register Branch

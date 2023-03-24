@@ -10,10 +10,6 @@ func Test_parser(t *testing.T) {
 		Key:        "ᬅᬓ᭄ᬱᬭ",
 		ModelPath:  "example/model",
 		ModuleName: "github.com/wirnat/axara",
-		ExecuteModels: []string{
-			"Company",
-			"Branch",
-		},
 		ModuleTraits: []ModuleTrait{
 			{
 				Name:     "~model_snake~ repository interfaces",
@@ -37,7 +33,7 @@ func Test_parser(t *testing.T) {
 			"testing_env/module_trait.yaml",
 		},
 		ResultPath: "",
-		Models: map[string]map[string]interface{}{
+		Models: map[string]map[string]string{
 			"User": {
 				"module": "user",
 			},
@@ -51,10 +47,6 @@ func Test_parser(t *testing.T) {
 		Key:        "ᬅᬓ᭄ᬱᬭ",
 		ModelPath:  "example/model",
 		ModuleName: "github.com/wirnat/axara",
-		ExecuteModels: []string{
-			"Company",
-			"Branch",
-		},
 		ModuleTraits: []ModuleTrait{
 			{
 				Name:     "~model_snake~ repository interfaces",
@@ -78,7 +70,7 @@ func Test_parser(t *testing.T) {
 			"testing_env/module_trait.json",
 		},
 		ResultPath: "",
-		Models: map[string]map[string]interface{}{
+		Models: map[string]map[string]string{
 			"User": {
 				"module": "user",
 			},

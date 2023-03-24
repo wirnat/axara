@@ -2,6 +2,7 @@ package v1
 
 import (
 	"bufio"
+	"fmt"
 	plural "github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"io"
@@ -25,6 +26,10 @@ func (r *ModelTrait) getModelField(fl io.Reader, config Constructor) error {
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), "~ignore") {
 			continue
+		}
+
+		if strings.Contains(scanner.Text(), fmt.Sprintf("@Register %v", r.Model)) {
+			break
 		}
 
 		field := strings.Fields(scanner.Text())

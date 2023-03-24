@@ -3,6 +3,7 @@ package v1
 import (
 	"bufio"
 	"github.com/wirnat/axara/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/global"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -31,33 +32,23 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 
 	//Collect all data from executed model model
 	scanner := bufio.NewScanner(fileE)
-	modelOpen := false
-	modelClose := false
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		executorModelFound := strings.Contains(line, "~model~")
-		endModelFound := strings.Contains(line, "~end_model~")
-		if endModelFound {
-			modelClose = true
-			continue
-		}
-		//set ModelTrait when find ~model~ in line of the file
+		executorModelFound := strings.Contains(line, "@Register")
 		if executorModelFound {
-			modelOpen = true
-			modelFields := strings.Fields(line)
-			if len(modelFields) != 2 {
+			initiator := strings.Fields(line)
+			if len(initiator) != 2 {
 				return nil, errors.InvalidModelFlag
 			}
-			modelName := modelFields[1]
-
-			for _, modelExecuteJson := range c.ExecuteModels {
-				re, err := regexp.Compile(`[^\w]`)
-				if err != nil {
-					return nil, err
-				}
-				modelName = string(re.ReplaceAll([]byte(modelName), []byte("")))
-				if modelExecuteJson == modelName {
+			modelName := initiator[1]
+			re, err := regexp.Compile(`[^\w]`)
+			if err != nil {
+				return nil, err
+			}
+			modelName = string(re.ReplaceAll([]byte(modelName), []byte("")))
+			for _, executeModel := range global.ExecuteModels {
+				if executeModel == modelName {
 					file, err := os.Open(fileName)
 					if err != nil {
 						return nil, err
@@ -70,10 +61,6 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 				}
 			}
 		}
-	}
-
-	if modelOpen && !modelClose {
-		return nil, errors.NoEndModelFound
 	}
 
 	return

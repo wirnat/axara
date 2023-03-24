@@ -15,10 +15,9 @@ func Test_decoder_Decode(t *testing.T) {
 
 	builder := ModuleBuilder{
 		Constructor: Constructor{
-			Key:           "ᬅᬓ᭄ᬱᬭ",
-			ModelPath:     "testing_env/model",
-			ModuleName:    "github.com",
-			ExecuteModels: []string{"Branch"},
+			Key:        "ᬅᬓ᭄ᬱᬭ",
+			ModelPath:  "testing_env/model",
+			ModuleName: "github.com",
 			ModuleTraits: []ModuleTrait{
 				{
 					Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",

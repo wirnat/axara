@@ -15,14 +15,18 @@ func Test_readerMeta_GetMeta(t *testing.T) {
 
 	builder := ModuleBuilder{
 		Constructor: Constructor{
-			Key:           "ᬅᬓ᭄ᬱᬭ",
-			ModelPath:     "testing_env/model",
-			ModuleName:    "github.com",
-			ExecuteModels: []string{"Branch"},
+			Key:        "ᬅᬓ᭄ᬱᬭ",
+			ModelPath:  "testing_env/model",
+			ModuleName: "github.com",
 			ModuleTraits: []ModuleTrait{
 				{
 					Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 					Template: "",
+				},
+			},
+			Models: map[string]map[string]string{
+				"Branch": {
+					"module": "branch",
 				},
 			},
 		},
@@ -50,14 +54,14 @@ func Test_readerMeta_GetMeta(t *testing.T) {
 				file: f,
 				c:    builder.Constructor,
 			},
-			wantMeta: map[string]string{"model": "Branch", "module": "branch"},
+			wantMeta: map[string]string{"module": "branch"},
 			wantErr:  nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := readerMeta{}
-			gotMeta, err := m.GetMeta(tt.args.file, tt.args.c)
+			gotMeta, err := m.GetMeta(tt.args.file, tt.args.c, "Branch")
 			assert.Equal(t, tt.wantErr, err)
 			assert.Equalf(t, tt.wantMeta, gotMeta, "GetMeta()")
 		})

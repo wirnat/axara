@@ -1,13 +1,11 @@
 key: ᬅᬓ᭄ᬱᬭ
 model_path: example/model
 module_name: github.com/wirnat/axara
-execute_models:
-  - Branch
-  - Company
 models:
-  user:
-    - name: "opks"
-    - x: "x"
+  Branch:
+    module: "branch"
+  Company:
+    module: "company"
 meta:
   result_path: example/modules
   import_repository: "~module_name~/~result_path~/~module~/repository/~model_snake~_repository"

@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	v1 "github.com/wirnat/axara/cmd/v1"
+	"github.com/wirnat/axara/cmd/v1/global"
 	"github.com/wirnat/axara/cmd/v1/key"
 	"log"
 )
@@ -82,4 +83,5 @@ func init() {
 	rootCmd.AddCommand(checkVersion)
 	rootCmd.AddCommand(getter)
 	rootCmd.AddCommand(setter)
+	rootCmd.PersistentFlags().StringSliceVarP(&global.ExecuteModels, "models", "f", []string{}, "list of execute models")
 }

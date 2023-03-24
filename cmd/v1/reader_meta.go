@@ -11,7 +11,7 @@ import (
 )
 
 type ReaderMeta interface {
-	GetMeta(file fs.FileInfo, c Constructor) (meta map[string]string, err error)
+	GetMeta(file fs.FileInfo, c Constructor, modelName string) (meta map[string]string, err error)
 }
 
 type readerMeta struct{}
@@ -20,7 +20,10 @@ func NewReaderMeta() *readerMeta {
 	return &readerMeta{}
 }
 
-func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor) (meta map[string]string, err error) {
+func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor, modelName string) (meta map[string]string, err error) {
+	if meta == nil {
+		meta = make(map[string]string)
+	}
 	if file == nil {
 		return nil, fmt.Errorf("file is invalid")
 	}
@@ -37,9 +40,6 @@ func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor) (meta map[string]st
 		line := scanner.Text()
 		if strings.Contains(line, "~") {
 			field := strings.Fields(line)
-			if meta == nil {
-				meta = map[string]string{}
-			}
 			if len(field) == 2 {
 				re, err := regexp.Compile(`[^\w]`)
 				if err != nil {
@@ -52,5 +52,13 @@ func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor) (meta map[string]st
 		}
 	}
 
+	//Collect meta from config
+	for modelConf, modelConfMeta := range c.Models {
+		if modelName == modelConf {
+			for key, insideModelMeta := range modelConfMeta {
+				meta[key] = insideModelMeta
+			}
+		}
+	}
 	return
 }

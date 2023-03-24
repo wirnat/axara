@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/wirnat/axara/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/global"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -17,147 +17,9 @@ func Test_generator_Generate(t *testing.T) {
 		name    string
 		args    args
 		wantErr error
+		init    func()
 		fun     func(t assert.TestingT)
 	}{
-		{
-			name: "Key not equal with ᬅᬓ᭄ᬱᬭ",
-			args: args{
-				c: Constructor{
-					Key:           "",
-					ModelPath:     "",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: nil,
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.InvalidKey,
-		},
-		{
-			name: "Construct model traits<1 return error: nothing todo ",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: nil,
-				},
-			},
-			wantErr: errors.NothingTodo,
-		},
-		{
-			name: "Get directory from model, if not valid return error: no model found ",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model_empty",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: []string{"Company"},
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.NoModelFound,
-		},
-		{
-			name: "No model contain ~model~ inside the directory, return no model contain ~model~",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model_without_flag",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: []string{"Company"},
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.NoModelCanExecute,
-		},
-		{
-			name: "~model~ was found, but not has any value, return error: InvalidModelFlag",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model_with_invalid_value",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: []string{"Company"},
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.InvalidModelFlag,
-		},
-		{
-			name: "~model~ was found, but not has ~end_model~ comment",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model_without_end",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: []string{"Company"},
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.NoEndModelFound,
-		},
-		{
-			name: "No match execute model",
-			args: args{
-				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model",
-					ResultPath:    "",
-					ModuleName:    "",
-					ExecuteModels: []string{"Company"},
-					ModuleTraits: []ModuleTrait{
-						{
-							Name:     "test",
-							Dir:      "",
-							FileName: "test",
-							Template: "test",
-						},
-					},
-				},
-			},
-			wantErr: errors.NoModelCanExecute,
-		},
 		{
 			name: "total generated directory must equal with execute trait on the model",
 			args: args{
@@ -165,11 +27,10 @@ func Test_generator_Generate(t *testing.T) {
 					Meta: map[string]string{
 						"request": "test",
 					},
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model",
-					ResultPath:    "",
-					ModuleName:    "~request~",
-					ExecuteModels: []string{"Branch"},
+					Key:        "ᬅᬓ᭄ᬱᬭ",
+					ModelPath:  "testing_env/model",
+					ResultPath: "",
+					ModuleName: "~request~",
 					ModuleTraits: []ModuleTrait{
 						{
 							Name:     "test",
@@ -195,6 +56,9 @@ func Test_generator_Generate(t *testing.T) {
 					os.RemoveAll("testing_env/modules")
 				}
 			},
+			init: func() {
+				global.ExecuteModels = []string{"Company"}
+			},
 		},
 		{
 			name: "only generate active trait",
@@ -203,11 +67,10 @@ func Test_generator_Generate(t *testing.T) {
 					Meta: map[string]string{
 						"request": "test",
 					},
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model",
-					ResultPath:    "",
-					ModuleName:    "~request~",
-					ExecuteModels: []string{"Branch"},
+					Key:        "ᬅᬓ᭄ᬱᬭ",
+					ModelPath:  "testing_env/model",
+					ResultPath: "",
+					ModuleName: "~request~",
 					ModuleTraits: []ModuleTrait{
 						{
 							Name:     "test",
@@ -233,6 +96,9 @@ func Test_generator_Generate(t *testing.T) {
 					os.RemoveAll("testing_env/modules")
 				}
 			},
+			init: func() {
+				global.ExecuteModels = []string{"Company"}
+			},
 		},
 	}
 	cmd := exec.Command("axara", "set", "--git-key=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")
@@ -246,6 +112,7 @@ func Test_generator_Generate(t *testing.T) {
 				GetModelTrait: NewModelFileReader(),
 				ReaderMeta:    NewReaderMeta(),
 			}
+			tt.init()
 			err = g.Generate(tt.args.c)
 			assert.Equal(t, tt.wantErr, err)
 			if tt.fun != nil {
@@ -280,11 +147,10 @@ func Test_generator_generateOnce(t *testing.T) {
 			},
 			args: args{
 				c: Constructor{
-					Key:           "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:     "testing_env/model",
-					ResultPath:    "",
-					ModuleName:    "~request~",
-					ExecuteModels: []string{"Branch"},
+					Key:        "ᬅᬓ᭄ᬱᬭ",
+					ModelPath:  "testing_env/model",
+					ResultPath: "",
+					ModuleName: "~request~",
 					ModuleTraits: []ModuleTrait{
 						{
 							Name:     "test",

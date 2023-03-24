@@ -1,6 +1,8 @@
 package v1
 
-import "github.com/janeczku/go-spinner"
+import (
+	"github.com/janeczku/go-spinner"
+)
 
 type app struct {
 	path string
