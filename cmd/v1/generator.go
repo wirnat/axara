@@ -35,9 +35,7 @@ func (g generator) Generate(c Constructor) error {
 	if c.Key != "ᬅᬓ᭄ᬱᬭ" {
 		return er.InvalidKey
 	}
-	if c.ExecuteModels == nil {
-		return er.NothingTodo
-	}
+
 	if c.ModuleTraits == nil {
 		return er.NothingTodo
 	}
@@ -175,10 +173,11 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 
 			//get meta from model file
-			metas, err := g.ReaderMeta.GetMeta(mf[i], c)
+			metas, err := g.ReaderMeta.GetMeta(mf[i], c, builder.Model)
 			if err != nil {
 				return err
 			}
+
 			for key, val := range metas {
 				builder.Meta[key] = val
 			}

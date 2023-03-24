@@ -7,11 +7,7 @@ type Branch struct {
 	Description *string `json:"description"`
 }
 
-/*
-	~model~ Branch
-	~module branch
-	~end_model~
-*/
+//@Register Branch
 
 type CheckDoubled struct {
 	Name string `json:"name"`

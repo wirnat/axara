@@ -17,5 +17,13 @@
   ],
   "include_module_traits": [
     "testing_env/module_trait.json"
-  ]
+  ],
+  "models": {
+    "User": {
+      "module": "user"
+    },
+    "Company":{
+      "module": "company"
+    }
+  }
 }
