@@ -1,7 +1,0 @@
-
-module_traits:
-    - name: "~model_snake~ delivery"
-      dir: "~result_path~/~model_snake~/~model_snake~_delivery"
-      template: ~template~/delivery.text
-      file_name: "~model_snake~_delivery.go"
-      active: true

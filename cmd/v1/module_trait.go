@@ -7,4 +7,5 @@ type ModuleTrait struct {
 	Template string   `json:"template" yaml:"template"`
 	Active   bool     `json:"active" yaml:"active"`
 	CMD      []string `json:"cmd" yaml:"CMD"`
+	Tags     []string `json:"tags" yaml:"tags"`
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/iancoleman/strcase"
 	er "github.com/wirnat/axara/cmd/v1/errors"
+	"github.com/wirnat/axara/cmd/v1/global"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -160,7 +161,22 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 	//loop scanned model trait
 	for i, t := range mt {
 		//generate file per module model
+	loop:
 		for _, trait := range c.ModuleTraits {
+			if global.Tags != nil {
+				for _, moduleTrait := range global.Tags {
+					if trait.Tags == nil {
+						continue loop
+					}
+					for _, tag := range trait.Tags {
+						if tag != moduleTrait {
+							continue loop
+						}
+					}
+				}
+
+			}
+
 			ss.Title = fmt.Sprintf("Build %v... ", trait.Name)
 
 			totalTask++
@@ -250,6 +266,7 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 			}
 			fmt.Println(fmt.Sprintf("	✅  %v \n", trait.Name))
 			successTask++
+
 		}
 	}
 	if len(mt) < 1 {
