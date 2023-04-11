@@ -1,7 +1,8 @@
-package v1
+package reader
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/wirnat/axara/cmd/v1"
 	"io/fs"
 	"os"
 	"testing"
@@ -13,12 +14,12 @@ func Test_readerMeta_GetMeta(t *testing.T) {
 		panic(err)
 	}
 
-	builder := ModuleBuilder{
-		Constructor: Constructor{
+	builder := v1.ModuleBuilder{
+		Constructor: v1.Constructor{
 			Key:        "ᬅᬓ᭄ᬱᬭ",
 			ModelPath:  "testing_env/model",
 			ModuleName: "github.com",
-			Jobs: []Job{
+			Jobs: []v1.Job{
 				{
 					Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 					Template: "",
@@ -30,7 +31,7 @@ func Test_readerMeta_GetMeta(t *testing.T) {
 				},
 			},
 		},
-		ModelTrait: &ModelTrait{
+		ModelTrait: &v1.ModelTrait{
 			ModelFields: nil,
 			Model:       "Branch",
 			ModelSnake:  "branch",
@@ -40,7 +41,7 @@ func Test_readerMeta_GetMeta(t *testing.T) {
 
 	type args struct {
 		file fs.FileInfo
-		c    Constructor
+		c    v1.Constructor
 	}
 	tests := []struct {
 		name     string

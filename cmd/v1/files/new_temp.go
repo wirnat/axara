@@ -1,0 +1,3 @@
+package files
+
+const New = "key: ᬅᬓ᭄ᬱᬭ #init aksara key\nmodel_path: model  #init model dir\nmodule_name: my-app  #init module gomod\nmodels:\n    Model1: #Example Model1 Name\n      my_meta: meta_value_or_whatever\n    Model2: #Example Model2 Name\n      my_meta: meta_value_or_whatever\nmeta:\n  result_path: module\n   #you can fill other static meta here\n\n#jobs is queue of generator file\njobs:\n  - name:  #job name\n    dir:  #directory generate file\n    template:  #template for generate file\n    file_name:  #generated file name\n    active:  #active/nonactive job\n    generate_in:  #replace code @GenerateIn [key] in file with this job\n    tags:\n      #list of tag, that can executed by group of tag\n      - repo or whatever\n"

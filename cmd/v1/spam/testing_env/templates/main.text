@@ -1,0 +1,10 @@
+package main
+
+//{{.Meta.test}}
+func main() {
+	//@Generate app
+
+	//@Generate route
+
+	//@Generate endApp
+}

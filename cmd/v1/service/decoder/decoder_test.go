@@ -1,24 +1,25 @@
-package v1
+package decoder
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/wirnat/axara/cmd/v1"
 	"testing"
 )
 
 func Test_decoder_Decode(t *testing.T) {
 	type fields struct {
-		Constructor Constructor
+		Constructor v1.Constructor
 	}
 	type args struct {
 		code []string
 	}
 
-	builder := ModuleBuilder{
-		Constructor: Constructor{
+	builder := v1.ModuleBuilder{
+		Constructor: v1.Constructor{
 			Key:        "ᬅᬓ᭄ᬱᬭ",
 			ModelPath:  "testing_env/model",
 			ModuleName: "github.com",
-			Jobs: []Job{
+			Jobs: []v1.Job{
 				{
 					Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 					Template: "",
@@ -29,7 +30,7 @@ func Test_decoder_Decode(t *testing.T) {
 				"import_infrastructure": "github.com/test",
 			},
 		},
-		ModelTrait: &ModelTrait{
+		ModelTrait: &v1.ModelTrait{
 			ModelFields: nil,
 			Model:       "Branch",
 			ModelSnake:  "branch",

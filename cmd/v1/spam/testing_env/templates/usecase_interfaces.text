@@ -3,10 +3,11 @@ package {{.ModelSnake}}_usecase
 import (
     "context"
     "{{.ModuleName}}/{{.ModelPath}}"
-    "{{.ModuleName}}/{{.ResultPath}}/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
+    "{{.ModuleName}}/{{.Meta.result_path}}/{{.ModelSnake}}/request/{{.ModelSnake}}_request"
 
 )
 
+//{{.Meta.test}}
 type {{.Model}}Usecase interface {
 	Store(ctx context.Context, req {{.ModelSnake}}_request.{{.Model}}Store) (r model.{{.Model}}, err error)
 	Update(ctx context.Context, req {{.ModelSnake}}_request.{{.Model}}Update) (r model.{{.Model}}, err error)

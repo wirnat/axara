@@ -1,7 +1,8 @@
-package v1
+package reader
 
 import (
 	"bufio"
+	"github.com/wirnat/axara/cmd/v1"
 	"github.com/wirnat/axara/cmd/v1/errors"
 	"github.com/wirnat/axara/cmd/v1/global"
 	"io/fs"
@@ -11,17 +12,13 @@ import (
 	"strings"
 )
 
-type FileModelTrait interface {
-	GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelTrait, err error)
-}
-
 type file struct{}
 
 func NewModelFileReader() *file {
 	return &file{}
 }
 
-func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelTrait, err error) {
+func (g file) GetModelTrait(file fs.FileInfo, c v1.Constructor) (modelTrait *v1.ModelTrait, err error) {
 	fileName := filepath.Join(c.ModelPath, file.Name())
 	fileE, err := os.Open(fileName)
 	if err != nil {
@@ -53,7 +50,7 @@ func (g file) GetModelTrait(file fs.FileInfo, c Constructor) (modelTrait *ModelT
 					if err != nil {
 						return nil, err
 					}
-					modelTrait = NewModelTraitFromFile(file, modelName, c)
+					modelTrait = v1.NewModelTraitFromFile(file, modelName, c)
 					err = file.Close()
 					if err != nil {
 						return nil, err

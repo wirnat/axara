@@ -1,8 +1,9 @@
-package v1
+package reader
 
 import (
 	"bufio"
 	"fmt"
+	"github.com/wirnat/axara/cmd/v1"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -10,17 +11,13 @@ import (
 	"strings"
 )
 
-type ReaderMeta interface {
-	GetMeta(file fs.FileInfo, c Constructor, modelName string) (meta map[string]string, err error)
-}
-
 type readerMeta struct{}
 
 func NewReaderMeta() *readerMeta {
 	return &readerMeta{}
 }
 
-func (m readerMeta) GetMeta(file fs.FileInfo, c Constructor, modelName string) (meta map[string]string, err error) {
+func (m readerMeta) GetMeta(file fs.FileInfo, c v1.Constructor, modelName string) (meta map[string]string, err error) {
 	if meta == nil {
 		meta = make(map[string]string)
 	}

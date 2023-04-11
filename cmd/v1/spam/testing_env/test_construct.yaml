@@ -1,23 +1,22 @@
 key: ᬅᬓ᭄ᬱᬭ
-model_path: example/model
+model_path: model
 module_name: github.com/wirnat/axara
 models:
-    User:
-      module: user
+    Branch:
+      module: branch
     Company:
       module: company
 
 meta:
   result_path: module
 include_module_traits:
-  - testing_env/module_trait.yaml
+  - module_trait.yaml
 jobs:
   - name: "~model_snake~ repository interfaces"
-    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
-    template: template/clean_architecture/repository_interfaces.text
+    dir: "~result_path~/~module~/repository/~model_snake~_repository"
+    template: templates/usecase_interfaces.text
     file_name: "~model_snake~.go"
     active: true
-    bind_model: true
     generate_in: route
     tags:
       - repo

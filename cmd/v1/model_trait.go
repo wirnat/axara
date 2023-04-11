@@ -6,6 +6,7 @@ import (
 	plural "github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -18,6 +19,7 @@ type ModelTrait struct {
 	ModelSnake  string       `json:"model_snake"`
 	ModelCamel  string       `json:"model_camel"`
 	ModelPlural string       `json:"model_plural"`
+	FileInfo    fs.FileInfo
 }
 
 //getModelField get model fields

@@ -1,7 +1,8 @@
-package v1
+package reader
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/wirnat/axara/cmd/v1"
 	"github.com/wirnat/axara/cmd/v1/global"
 	"io/fs"
 	"os"
@@ -9,32 +10,32 @@ import (
 )
 
 func Test_file_GetModelTrait(t *testing.T) {
-	f, err := os.Stat("testing_env/model/company.go")
+	f, err := os.Stat("../..//spam/testing_env/model/company.go")
 	if err != nil {
 		panic(err)
 	}
 
 	type args struct {
 		file fs.FileInfo
-		c    Constructor
+		c    v1.Constructor
 	}
 	tests := []struct {
 		name           string
 		args           args
-		wantModelTrait *ModelTrait
+		wantModelTrait *v1.ModelTrait
 		wantErr        assert.ErrorAssertionFunc
-		fun            func(t assert.TestingT, trait *ModelTrait, err error)
+		fun            func(t assert.TestingT, trait *v1.ModelTrait, err error)
 		init           func()
 	}{
 		{
 			name: "Read file",
 			args: args{
 				file: f,
-				c: Constructor{
+				c: v1.Constructor{
 					Key:        "ᬅᬓ᭄ᬱᬭ",
 					ModelPath:  "testing_env/model",
 					ModuleName: "github.com",
-					Jobs: []Job{
+					Jobs: []v1.Job{
 						{
 							Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 							Template: "",
@@ -44,7 +45,7 @@ func Test_file_GetModelTrait(t *testing.T) {
 			},
 			wantModelTrait: nil,
 			wantErr:        nil,
-			fun: func(t assert.TestingT, trait *ModelTrait, err error) {
+			fun: func(t assert.TestingT, trait *v1.ModelTrait, err error) {
 				assert.Nil(t, err)
 				assert.NotNil(t, trait)
 				assert.Len(t, trait.ModelFields, 6)

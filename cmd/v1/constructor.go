@@ -12,7 +12,6 @@ type Constructor struct {
 	GitAccessKey        string                       `json:"git_access_key" yaml:"git_access_key"`
 	Key                 string                       `json:"key" yaml:"key"`
 	ModelPath           string                       `json:"model_path" yaml:"model_path"`
-	ResultPath          string                       `json:"result_path" yaml:"result_path"`
 	ModuleName          string                       `json:"module_name" yaml:"module_name"`
 	Jobs                []Job                        `json:"jobs" yaml:"jobs"`
 	Meta                map[string]string            `json:"meta" yaml:"meta"`

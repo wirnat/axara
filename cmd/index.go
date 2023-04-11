@@ -7,8 +7,12 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	v1 "github.com/wirnat/axara/cmd/v1"
+	"github.com/wirnat/axara/cmd/v1/files"
 	"github.com/wirnat/axara/cmd/v1/global"
+	v1 "github.com/wirnat/axara/cmd/v1/runner"
+	"github.com/wirnat/axara/cmd/v1/service/getter/go_git"
+	"os"
+	"text/template"
 )
 
 var generatorCmd = &cobra.Command{
@@ -33,6 +37,33 @@ var checkVersion = &cobra.Command{
 	},
 }
 
+var newConfig = &cobra.Command{
+	Use:   "new",
+	Short: "New Axara Config file",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 1 {
+			fmt.Println("❌ require argument filename, example: axara new wirnat_arch")
+			return
+		}
+		file, err := os.Create(args[0] + ".yaml")
+		if err != nil {
+			fmt.Println("❌ " + err.Error())
+			return
+		}
+		tmt, err := template.New("new config").Parse(files.New)
+		if err != nil {
+			fmt.Println("❌ " + err.Error())
+			return
+		}
+
+		err = tmt.Execute(file, nil)
+		if err != nil {
+			fmt.Println("❌ " + err.Error())
+			return
+		}
+	},
+}
+
 var getter = &cobra.Command{
 	Use:        "get",
 	Aliases:    nil,
@@ -40,7 +71,7 @@ var getter = &cobra.Command{
 	Short:      "Get CLI Item from github",
 	Example:    "axara get https://github.com/wirnat/axara-template-go-clean-architecture templates",
 	Run: func(cmd *cobra.Command, args []string) {
-		gt := v1.NewGetter()
+		gt := go_git.NewGetter()
 		if len(args) != 2 {
 			logrus.Fatal("directory required")
 		}
@@ -71,6 +102,7 @@ func init() {
 	rootCmd.AddCommand(generatorCmd)
 	rootCmd.AddCommand(checkVersion)
 	rootCmd.AddCommand(getter)
+	rootCmd.AddCommand(newConfig)
 	rootCmd.PersistentFlags().StringSliceVarP(&global.Tags, "tags", "g", []string{}, "List of execute traits/jobs")
 	rootCmd.PersistentFlags().StringSliceVarP(&global.ExecuteModels, "models", "m", []string{}, "list of execute models")
 }
