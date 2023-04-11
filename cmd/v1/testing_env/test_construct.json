@@ -6,7 +6,7 @@
   "meta": {
     "result_path": "module"
   },
-  "module_traits": [
+  "jobs": [
     {
       "name": "~model_snake~ repository interfaces",
       "dir": "~result_path~/~model_snake~/repository/~model_snake~_repository",

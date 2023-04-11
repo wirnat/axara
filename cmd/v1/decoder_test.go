@@ -18,7 +18,7 @@ func Test_decoder_Decode(t *testing.T) {
 			Key:        "ᬅᬓ᭄ᬱᬭ",
 			ModelPath:  "testing_env/model",
 			ModuleName: "github.com",
-			ModuleTraits: []ModuleTrait{
+			Jobs: []Job{
 				{
 					Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 					Template: "",
@@ -29,7 +29,7 @@ func Test_decoder_Decode(t *testing.T) {
 				"import_infrastructure": "github.com/test",
 			},
 		},
-		ModelTrait: ModelTrait{
+		ModelTrait: &ModelTrait{
 			ModelFields: nil,
 			Model:       "Branch",
 			ModelSnake:  "branch",
@@ -78,7 +78,7 @@ func Test_decoder_Decode(t *testing.T) {
 				Construct: tt.fields.Constructor,
 			}
 			for i, c := range tt.args.code {
-				decoded := d.Decode(c, &builder.ModelTrait)
+				decoded := d.Decode(c, builder.ModelTrait)
 				assert.Equal(t, tt.wantEncoded[i], decoded)
 			}
 		})

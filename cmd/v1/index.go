@@ -23,8 +23,9 @@ func (a app) Generate() error {
 
 	modelReader := NewModelFileReader()
 	metaReader := NewReaderMeta()
-	generator := NewGenerator(modelReader, metaReader)
-	err = generator.Generate(*constructor)
+	_decoder := NewDecoder(*constructor)
+	_generator := NewGenerator(modelReader, metaReader, _decoder)
+	err = _generator.Generate(*constructor)
 	if err != nil {
 		return err
 	}

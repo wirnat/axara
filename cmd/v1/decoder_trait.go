@@ -9,10 +9,12 @@ func NewDecoderTrait(c Constructor) *decoderTrait {
 	return &decoderTrait{decoder: *d}
 }
 
-func (d decoder) DecodeTrait(trait ModuleTrait, mt *ModelTrait) (r ModuleTrait) {
+func (d decoder) DecodeTrait(trait Job, mt *ModelTrait) (r Job) {
 	r.Dir = d.Decode(trait.Dir, mt)
 	r.FileName = d.Decode(trait.FileName, mt)
 	r.Name = d.Decode(trait.Name, mt)
 	r.Template = d.Decode(trait.Template, mt)
+	r.GenerateIn = d.Decode(trait.GenerateIn, mt)
+	r.Active = trait.Active
 	return
 }

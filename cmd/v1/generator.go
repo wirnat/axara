@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"github.com/iancoleman/strcase"
@@ -9,17 +10,19 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
-	"os/exec"
+	"regexp"
+	"strings"
 	"text/template"
 )
 
 type generator struct {
 	GetModelTrait FileModelTrait
 	ReaderMeta    ReaderMeta
+	Decoder       Decoder
 }
 
-func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta) *generator {
-	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta}
+func NewGenerator(getModelTrait FileModelTrait, readerMeta ReaderMeta, decoder Decoder) *generator {
+	return &generator{GetModelTrait: getModelTrait, ReaderMeta: readerMeta, Decoder: decoder}
 }
 
 /*
@@ -30,14 +33,12 @@ var yesForAll *bool
 
 func (g generator) Generate(c Constructor) error {
 	//defer ss.Stop()
-	ya := false
-	yesForAll = &ya
 
 	if c.Key != "ᬅᬓ᭄ᬱᬭ" {
 		return er.InvalidKey
 	}
 
-	if c.ModuleTraits == nil {
+	if c.Jobs == nil {
 		return er.NothingTodo
 	}
 
@@ -65,89 +66,124 @@ func (g generator) Generate(c Constructor) error {
 		}
 	}
 
-	err = g.generateOnce(c)
+	err = g.executePerModel(mt, mf, c)
 	if err != nil {
 		return err
 	}
 
-	err = g.generatePerModule(mt, mf, c)
+	err = g.executeSingle(c)
 	if err != nil {
 		return err
 	}
-
-	//ss.Stop()
 
 	return nil
 }
 
-/*
-	generateOnce generate file in traits
-	this method executed only once when the generator executed
-*/
-func (g generator) generateOnce(c Constructor) error {
-	decoder := NewDecoder(c)
-	for _, trait := range c.Traits {
-		ss.Title = fmt.Sprintf("Execute %v... ", trait.Name)
+func (g generator) getData(c Constructor, t *ModelTrait, mf fs.FileInfo) (builder ModuleBuilder, err error) {
+	builder = ModuleBuilder{
+		Constructor: c,
+		ModelTrait:  t,
+	}
 
-		if !trait.Active {
+	//get meta from model file
+	if builder.ModelTrait != nil {
+		metas, err := g.ReaderMeta.GetMeta(mf, c, builder.Model)
+		if err != nil {
+			return ModuleBuilder{}, err
+		}
+
+		for key, val := range metas {
+			builder.Meta[key] = val
+		}
+
+		_decoder := NewDecoderBuilder(builder.Constructor)
+		builder = _decoder.DecodeBuilder(builder)
+
+		//decode ~code~
+		_decoderTrait := NewDecoderTrait(builder.Constructor)
+		for i, job := range c.Jobs {
+			builder.Constructor.Jobs[i] = _decoderTrait.DecodeTrait(job, builder.ModelTrait)
+		}
+	}
+	return
+}
+
+func (g generator) executeSingle(constructor Constructor) error {
+loop:
+	for _, job := range constructor.Jobs {
+		if !job.SingleExecute {
+			continue loop
+		}
+		generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
+		generatedFile = g.Decoder.Decode(generatedFile, nil)
+
+		if !*yesForAll {
+			if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
+				var input string
+			Scan:
+				{
+					ss.Stop()
+					fmt.Println(job.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
+					_, err := fmt.Scanln(&input)
+					if err != nil {
+						fmt.Println("	something is wrong")
+						continue
+					}
+				}
+
+				input = strcase.ToSnake(input)
+				if input == "ya" {
+					ya := true
+					yesForAll = &ya
+				}
+				if input == "no" || input == "n" {
+					continue
+				}
+				if input != "yes" && input != "y" && input != "ya" {
+					goto Scan
+				}
+			}
+		}
+
+		fileTrait, err := os.Create(generatedFile)
+		if err != nil {
+			return err
+		}
+
+		tmt, err := template.ParseFiles(job.Template)
+		if err != nil {
+			fmt.Println("❌ " + err.Error())
+			return err
+		}
+
+		ss.Title = fmt.Sprintf("Build %v... ", job.Name)
+
+		if !job.Active {
 			continue
 		}
 
-		if len(trait.CMD) > 1 {
-			dirTarget := decoder.Decode(trait.Dir, nil)
-
-			if _, err := os.Stat(dirTarget); errors.Is(err, os.ErrNotExist) {
-				cmd := exec.Command(trait.CMD[0], trait.CMD[1:]...)
-				err = cmd.Run()
-				if err != nil {
-					return fmt.Errorf("invalid command")
-				}
-			}
-		} else {
-			constructorDecoded := Constructor{
-				GitAccessKey:        decoder.Decode(c.GitAccessKey, nil),
-				Key:                 decoder.Decode(c.Key, nil),
-				ModelPath:           decoder.Decode(c.ModelPath, nil),
-				ResultPath:          decoder.Decode(c.ResultPath, nil),
-				ModuleName:          decoder.Decode(c.ModuleName, nil),
-				ModuleTraits:        nil,
-				Meta:                nil,
-				IncludeModuleTraits: c.IncludeModuleTraits,
-				IncludeTraits:       c.IncludeTraits,
-				Traits:              nil,
-			}
-
-			for _, moduleTrait := range c.ModuleTraits {
-				moduleTrait = ModuleTrait{
-					Name:     decoder.Decode(moduleTrait.Name, nil),
-					Dir:      decoder.Decode(moduleTrait.Dir, nil),
-					FileName: decoder.Decode(moduleTrait.FileName, nil),
-					Template: decoder.Decode(moduleTrait.Template, nil),
-					Active:   moduleTrait.Active,
-					CMD:      moduleTrait.CMD,
-				}
-				constructorDecoded.ModuleTraits = append(constructorDecoded.ModuleTraits, moduleTrait)
-			}
-
-			for key, val := range constructorDecoded.Meta {
-				constructorDecoded.Meta[key] = decoder.Decode(val, nil)
-			}
-
-			for _, t := range constructorDecoded.Traits {
-				t = ModuleTrait{
-					Name:     decoder.Decode(t.Name, nil),
-					Dir:      decoder.Decode(t.Dir, nil),
-					FileName: decoder.Decode(t.FileName, nil),
-					Template: decoder.Decode(t.Template, nil),
-					Active:   t.Active,
-					CMD:      t.CMD,
-				}
-				constructorDecoded.Traits = append(constructorDecoded.Traits, t)
-			}
-
+		err = os.MkdirAll(g.Decoder.Decode(job.Dir, nil), os.ModePerm)
+		if err != nil {
+			fmt.Println("	❌" + err.Error())
+			continue
 		}
-	}
 
+		builder, err := g.getData(constructor, nil, nil)
+		if err != nil {
+			return err
+		}
+
+		err = tmt.Execute(fileTrait, builder)
+		if err != nil {
+			fmt.Println("❌ " + err.Error())
+			return err
+		}
+		err = fileTrait.Close()
+		if err != nil {
+			return err
+		}
+		fmt.Println(fmt.Sprintf("	✅  %v \n", job.Name))
+	}
 	return nil
 }
 
@@ -155,20 +191,27 @@ func (g generator) generateOnce(c Constructor) error {
 	generatePerModule generate file per scanned model
 	module traits will loop inside scan model process
 */
-func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Constructor) error {
+func (g generator) executePerModel(mt []*ModelTrait, mf []fs.FileInfo, c Constructor) error {
 	totalTask := 0
 	successTask := 0
 	//loop scanned model trait
 	for i, t := range mt {
 		//generate file per module model
+		builder, err := g.getData(c, t, mf[i])
+		if err != nil {
+			return err
+		}
 	loop:
-		for _, trait := range c.ModuleTraits {
+		for _, job := range c.Jobs {
+			if job.SingleExecute {
+				continue loop
+			}
 			if global.Tags != nil {
 				for _, moduleTrait := range global.Tags {
-					if trait.Tags == nil {
+					if job.Tags == nil {
 						continue loop
 					}
-					for _, tag := range trait.Tags {
+					for _, tag := range job.Tags {
 						if tag != moduleTrait {
 							continue loop
 						}
@@ -177,41 +220,20 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 
 			}
 
-			ss.Title = fmt.Sprintf("Build %v... ", trait.Name)
+			ss.Title = fmt.Sprintf("Build %v... ", job.Name)
 
 			totalTask++
-			if !trait.Active {
+			if !job.Active {
 				continue
 			}
-			builder := ModuleBuilder{
-				Constructor: c,
-				ModelTrait:  *t,
-			}
 
-			//get meta from model file
-			metas, err := g.ReaderMeta.GetMeta(mf[i], c, builder.Model)
-			if err != nil {
-				return err
-			}
-
-			for key, val := range metas {
-				builder.Meta[key] = val
-			}
-
-			//decode ~code~
-			decoderTrait := NewDecoderTrait(builder.Constructor)
-			trait = decoderTrait.DecodeTrait(trait, &builder.ModelTrait)
-
-			decoder := NewDecoderBuilder(builder.Constructor)
-			builder = decoder.DecodeBuilder(builder)
-
-			err = os.MkdirAll(decoder.Decode(trait.Dir, &builder.ModelTrait), os.ModePerm)
+			err = os.MkdirAll(g.Decoder.Decode(job.Dir, builder.ModelTrait), os.ModePerm)
 			if err != nil {
 				fmt.Println("	❌" + err.Error())
 				continue
 			}
 
-			templateDir := decoder.Decode(trait.Template, &builder.ModelTrait)
+			templateDir := g.Decoder.Decode(job.Template, builder.ModelTrait)
 
 			tmt, err := template.ParseFiles(templateDir)
 			if err != nil {
@@ -219,53 +241,114 @@ func (g generator) generatePerModule(mt []*ModelTrait, mf []fs.FileInfo, c Const
 				continue
 			}
 
-			generatedFile := fmt.Sprintf("%v/%v", trait.Dir, trait.FileName)
-			generatedFile = decoder.Decode(generatedFile, &builder.ModelTrait)
-			if !*yesForAll {
-				if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
-					var input string
-				Scan:
-					{
-						ss.Stop()
-						fmt.Println(trait.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
-						_, err := fmt.Scanln(&input)
-						if err != nil {
-							fmt.Println("	something is wrong")
+			generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
+			generatedFile = g.Decoder.Decode(generatedFile, builder.ModelTrait)
+			if job.GenerateIn == "" {
+				if !*yesForAll {
+					if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
+						var input string
+					Scan:
+						{
+							ss.Stop()
+							fmt.Println(job.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
+							_, err := fmt.Scanln(&input)
+							if err != nil {
+								fmt.Println("	something is wrong")
+								continue
+							}
+						}
+
+						input = strcase.ToSnake(input)
+						if input == "ya" {
+							ya := true
+							yesForAll = &ya
+						}
+						if input == "no" || input == "n" {
 							continue
+						}
+						if input != "yes" && input != "y" && input != "ya" {
+							goto Scan
+						}
+					}
+				}
+
+				fileTrait, err := os.Create(generatedFile)
+				if err != nil {
+					fmt.Println("	❌ " + err.Error())
+					continue
+				}
+
+				err = tmt.Execute(fileTrait, builder)
+				if err != nil {
+					fmt.Println("	❌ " + err.Error())
+					continue
+				}
+				err = fileTrait.Close()
+				if err != nil {
+					return err
+				}
+				fmt.Println(fmt.Sprintf("	✅  %v \n", job.Name))
+				successTask++
+			} else {
+				err := func() error {
+					f, err := os.Open(generatedFile)
+					if err != nil {
+						return err
+					}
+
+					defer f.Close()
+
+					// Membaca isi file baris per baris dan menulis kembali ke file yang lama
+					tmpFile, err := os.CreateTemp(job.Dir, "test_*.txt")
+					if err != nil {
+						return err
+					}
+					defer os.Remove(tmpFile.Name())
+
+					//Collect all data from executed model model
+					scanner := bufio.NewScanner(f)
+					writer := bufio.NewWriter(tmpFile)
+
+					for scanner.Scan() {
+						line := scanner.Text()
+						generateCommentFound := strings.Contains(line, "@Generate")
+						if generateCommentFound {
+							initiator := strings.Fields(line)
+							if len(initiator) != 2 {
+								return err
+							}
+							generateTag := initiator[1]
+							re, err := regexp.Compile(`[^\w]`)
+							if err != nil {
+								return err
+							}
+							generateTag = string(re.ReplaceAll([]byte(generateTag), []byte("")))
+							if generateTag == job.GenerateIn {
+								var buf strings.Builder
+								if err := tmt.Execute(&buf, builder); err != nil {
+									return err
+								}
+								line = buf.String()
+							}
+						}
+						fmt.Fprintln(writer, line)
+
+						err = writer.Flush()
+						if err != nil {
+							return err
 						}
 					}
 
-					input = strcase.ToSnake(input)
-					if input == "ya" {
-						ya := true
-						yesForAll = &ya
+					// Menimpa file lama dengan file yang telah diperbarui
+					if err = os.Rename(tmpFile.Name(), generatedFile); err != nil {
+						return err
 					}
-					if input == "no" || input == "n" {
-						continue
-					}
-					if input != "yes" && input != "y" && input != "ya" {
-						goto Scan
-					}
+					return nil
+				}()
+				if err != nil {
+					return err
 				}
 			}
-
-			fileTrait, err := os.Create(generatedFile)
-			if err != nil {
-				fmt.Println("	❌ " + err.Error())
-				continue
-			}
-
-			err = tmt.Execute(fileTrait, builder)
-			if err != nil {
-				fmt.Println("	❌ " + err.Error())
-				continue
-			}
-			err = fileTrait.Close()
-			if err != nil {
-				return err
-			}
-			fmt.Println(fmt.Sprintf("	✅  %v \n", trait.Name))
-			successTask++
 
 		}
 	}

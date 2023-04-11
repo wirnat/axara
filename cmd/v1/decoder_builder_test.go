@@ -14,7 +14,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 			Key:        "ᬅᬓ᭄ᬱᬭ",
 			ModelPath:  "branch",
 			ModuleName: "github.com",
-			ModuleTraits: []ModuleTrait{
+			Jobs: []Job{
 				{
 					Name: "repository", Dir: "testing_env/modules/~meta~/~model_snake~/~model~", FileName: "branch.go",
 					Template: "",
@@ -24,7 +24,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 				"meta": "test",
 			},
 		},
-		ModelTrait: ModelTrait{
+		ModelTrait: &ModelTrait{
 			ModelFields: nil,
 			Model:       "Branch",
 			ModelSnake:  "branch",
@@ -36,7 +36,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 			Key:        "ᬅᬓ᭄ᬱᬭ",
 			ModelPath:  "branch",
 			ModuleName: "github.com",
-			ModuleTraits: []ModuleTrait{
+			Jobs: []Job{
 				{
 					Name: "repository", Dir: "testing_env/modules/test/branch/Branch", FileName: "branch.go",
 					Template: "",
@@ -46,7 +46,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 				"meta": "test",
 			},
 		},
-		ModelTrait: ModelTrait{
+		ModelTrait: &ModelTrait{
 			ModelFields: nil,
 			Model:       "Branch",
 			ModelSnake:  "branch",

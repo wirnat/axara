@@ -1,0 +1,9 @@
+//@Generate route
+//{{.Model}} Route
+{{.ModelCamel}} := e.Group("{{.ModelCamel}}")
+{{.ModelCamel}}.GET("", func(c echo.Context) error {
+	return nil
+})
+{{.ModelCamel}}.GET("", func(c echo.Context) error {
+	return nil
+})

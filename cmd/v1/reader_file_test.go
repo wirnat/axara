@@ -34,7 +34,7 @@ func Test_file_GetModelTrait(t *testing.T) {
 					Key:        "ᬅᬓ᭄ᬱᬭ",
 					ModelPath:  "testing_env/model",
 					ModuleName: "github.com",
-					ModuleTraits: []ModuleTrait{
+					Jobs: []Job{
 						{
 							Name: "repository", Dir: "testing_env/modules", FileName: "branch.go",
 							Template: "",

@@ -6,87 +6,17 @@ import (
 )
 
 func Test_parser(t *testing.T) {
-	conYaml := &Constructor{
-		Key:        "ᬅᬓ᭄ᬱᬭ",
-		ModelPath:  "example/model",
-		ModuleName: "github.com/wirnat/axara",
-		ModuleTraits: []ModuleTrait{
-			{
-				Name:     "~model_snake~ repository interfaces",
-				Dir:      "~result_path~/~model_snake~/repository/~model_snake~_repository",
-				FileName: "~model_snake~.go",
-				Template: "template/clean_architecture/repository_interfaces.text",
-				Active:   true,
-			},
-			{
-				Name:     "~model_snake~ store param",
-				Dir:      "~result_path~/~model_snake~/request/~model_snake~_request",
-				FileName: "~model_snake~_store.go",
-				Template: "template/clean_architecture/param_store.text",
-				Active:   true,
-			},
-		},
-		Meta: map[string]string{
-			"result_path": "module",
-		},
-		IncludeModuleTraits: []string{
-			"testing_env/module_trait.yaml",
-		},
-		ResultPath: "",
-		Models: map[string]map[string]string{
-			"User": {
-				"module": "user",
-			},
-			"Company": {
-				"module": "company",
-			},
-		},
-	}
+	expectedYaml := &Constructor{GitAccessKey: "", Key: "ᬅᬓ᭄ᬱᬭ", ModelPath: "example/model", ResultPath: "", ModuleName: "github.com/wirnat/axara", Jobs: []Job{Job{Name: "~model_snake~ repository interfaces", Dir: "~result_path~/~model_snake~/repository/~model_snake~_repository", FileName: "~model_snake~.go", Template: "template/clean_architecture/repository_interfaces.text", Active: true, CMD: []string(nil), Tags: []string(nil)}}, Meta: map[string]string{"result_path": "module"}, IncludeModuleTraits: []string{"testing_env/module_trait.yaml"}, IncludeTraits: []string(nil), Models: map[string]map[string]string{"Company": map[string]string{"module": "company"}, "User": map[string]string{"module": "user"}}}
 
-	conJSON := &Constructor{
-		Key:        "ᬅᬓ᭄ᬱᬭ",
-		ModelPath:  "example/model",
-		ModuleName: "github.com/wirnat/axara",
-		ModuleTraits: []ModuleTrait{
-			{
-				Name:     "~model_snake~ repository interfaces",
-				Dir:      "~result_path~/~model_snake~/repository/~model_snake~_repository",
-				FileName: "~model_snake~.go",
-				Template: "template/clean_architecture/repository_interfaces.text",
-				Active:   true,
-			},
-			{
-				Name:     "~model_snake~ store param",
-				Dir:      "~result_path~/~model_snake~/request/~model_snake~_request",
-				FileName: "~model_snake~_store.go",
-				Template: "template/clean_architecture/param_store.text",
-				Active:   true,
-			},
-		},
-		Meta: map[string]string{
-			"result_path": "module",
-		},
-		IncludeModuleTraits: []string{
-			"testing_env/module_trait.json",
-		},
-		ResultPath: "",
-		Models: map[string]map[string]string{
-			"User": {
-				"module": "user",
-			},
-			"Company": {
-				"module": "company",
-			},
-		},
-	}
+	expectedJSON := &Constructor{GitAccessKey: "", Key: "ᬅᬓ᭄ᬱᬭ", ModelPath: "example/model", ResultPath: "", ModuleName: "github.com/wirnat/axara", Jobs: []Job{Job{Name: "~model_snake~ repository interfaces", Dir: "~result_path~/~model_snake~/repository/~model_snake~_repository", FileName: "~model_snake~.go", Template: "template/clean_architecture/repository_interfaces.text", Active: true, CMD: []string(nil), Tags: []string(nil)}}, Meta: map[string]string{"result_path": "module"}, IncludeModuleTraits: []string{"testing_env/module_trait.json"}, IncludeTraits: []string(nil), Models: map[string]map[string]string{"Company": map[string]string{"module": "company"}, "User": map[string]string{"module": "user"}}}
 
 	t.Run("Match to Constructor struct", func(t *testing.T) {
 		b, err := NewConstructor("testing_env/test_construct.yaml")
 		assert.Nil(t, err)
-		assert.Equalf(t, conYaml, b, "fromYAML()")
+		assert.Equalf(t, expectedYaml, b, "fromYAML()")
 
 		c, err := NewConstructor("testing_env/test_construct.json")
-		assert.Equalf(t, conJSON, c, "fromJSON()")
+		assert.Equalf(t, expectedJSON, c, "fromJSON()")
 		assert.Nil(t, err)
 	})
 }

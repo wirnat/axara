@@ -14,11 +14,10 @@ type Constructor struct {
 	ModelPath           string                       `json:"model_path" yaml:"model_path"`
 	ResultPath          string                       `json:"result_path" yaml:"result_path"`
 	ModuleName          string                       `json:"module_name" yaml:"module_name"`
-	ModuleTraits        []ModuleTrait                `json:"module_traits" yaml:"module_traits"`
+	Jobs                []Job                        `json:"jobs" yaml:"jobs"`
 	Meta                map[string]string            `json:"meta" yaml:"meta"`
 	IncludeModuleTraits []string                     `json:"include_module_traits"  yaml:"include_module_traits"`
 	IncludeTraits       []string                     `json:"include_traits" yaml:"include_traits"`
-	Traits              []ModuleTrait                `json:"traits" yaml:"traits"`
 	Models              map[string]map[string]string `json:"models" yaml:"models"`
 }
 
@@ -35,7 +34,7 @@ func NewConstructor(p string) (b *Constructor, err error) {
 			return nil, err
 		}
 
-		b.ModuleTraits = append(b.ModuleTraits, c.ModuleTraits...)
+		b.Jobs = append(b.Jobs, c.Jobs...)
 	}
 	return
 }
