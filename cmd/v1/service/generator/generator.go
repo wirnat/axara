@@ -41,7 +41,6 @@ func (g generator) Generate(c v1.Constructor) error {
 		return er.NothingTodo
 	}
 
-	global.Spinner.Title = "Read model path..."
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
 		return er.NoModelFound
@@ -119,7 +118,6 @@ loop:
 				var input string
 			Scan:
 				{
-					global.Spinner.Stop()
 					fmt.Println(job.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
 					_, err := fmt.Scanln(&input)
 					if err != nil {
@@ -157,8 +155,6 @@ loop:
 			fmt.Println("❌ " + err.Error())
 			return err
 		}
-
-		global.Spinner.Title = fmt.Sprintf("Build %v... ", job.Name)
 
 		if !job.Active {
 			continue
@@ -215,8 +211,6 @@ func (g generator) executePerModel(mt []*v1.ModelTrait, mf []fs.FileInfo, c v1.C
 				}
 			}
 
-			global.Spinner.Title = fmt.Sprintf("Build %v... ", job.Name)
-
 			totalTask++
 			if !job.Active {
 				continue
@@ -244,7 +238,6 @@ func (g generator) executePerModel(mt []*v1.ModelTrait, mf []fs.FileInfo, c v1.C
 						var input string
 					Scan:
 						{
-							global.Spinner.Stop()
 							fmt.Println(job.FileName+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
 							_, err := fmt.Scanln(&input)
 							if err != nil {

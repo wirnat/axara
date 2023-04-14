@@ -49,7 +49,7 @@ func (m readerMeta) GetMeta(file fs.FileInfo, c v1.Constructor, modelName string
 		}
 	}
 
-	//Collect meta from config
+	////Collect meta from config
 	for modelConf, modelConfMeta := range c.Models {
 		if modelName == modelConf {
 			for key, insideModelMeta := range modelConfMeta {

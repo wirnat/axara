@@ -82,14 +82,15 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 		fmt.Println("	❌" + err.Error())
 		return err
 	}
-	generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
-	generatedFile = g.Decoder.Decode(generatedFile, mt)
 
 	moduleBuilder := v1.ModuleBuilder{
 		Constructor: c,
 		ModelTrait:  mt,
 	}
+
 	moduleBuilder = g.DecodeBuilder(moduleBuilder)
+	generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
+	generatedFile = g.Decoder.Decode(generatedFile, mt)
 
 	tmt, err := template.ParseFiles(job.Template)
 	if err != nil {
@@ -103,6 +104,7 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 			fmt.Println("	❌ " + err.Error())
 			return err
 		}
+		fmt.Println(fmt.Sprintf("	✅  %v \n", job.Name))
 		return nil
 	}
 
@@ -153,8 +155,11 @@ func (g generator) ExecPerModel(job v1.Job, c v1.Constructor) error {
 
 	//execute per model
 	for _, m := range mt {
-		err = g.decodeConstructor(&c, m)
-		g.ExecOne(job, c, m)
+		builder := g.DecodeBuilder(v1.ModuleBuilder{
+			Constructor: c,
+			ModelTrait:  m,
+		})
+		g.ExecOne(job, builder.Constructor, builder.ModelTrait)
 	}
 
 	return nil
@@ -173,39 +178,6 @@ func (g generator) decodeJob(job v1.Job, mt *v1.ModelTrait) v1.Job {
 		SingleExecute: job.SingleExecute,
 	}
 	return j
-}
-
-func (g generator) decodeConstructor(c *v1.Constructor, mt *v1.ModelTrait) (err error) {
-	if mt != nil {
-		if c.Meta == nil {
-			c.Meta = map[string]string{}
-		}
-		metas, err := g.ReaderMeta.GetMeta(mt.FileInfo, *c, mt.Model)
-		if err != nil {
-			return err
-		}
-		for key, val := range metas {
-			c.Meta[key] = val
-		}
-	}
-
-	c.GitAccessKey = g.Decode(c.GitAccessKey, mt)
-	c.Key = g.Decode(c.Key, mt)
-	c.ModelPath = g.Decode(c.ModelPath, mt)
-	c.ModuleName = g.Decode(c.ModuleName, mt)
-
-	var jobs []v1.Job
-
-	for _, job := range c.Jobs {
-		jobs = append(jobs, g.decodeJob(job, mt))
-	}
-
-	for key, val := range c.Meta {
-		c.Meta[key] = g.Decode(val, mt)
-	}
-
-	c.Jobs = jobs
-	return
 }
 
 func injectCode(job v1.Job, generatedFile string, tmt template.Template, builder v1.ModuleBuilder) (err error) {

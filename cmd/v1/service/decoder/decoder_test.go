@@ -28,6 +28,7 @@ func Test_decoder_Decode(t *testing.T) {
 			Meta: map[string]string{
 				"module_target":         "branch",
 				"import_infrastructure": "github.com/test",
+				"dir_target":            "~module_target~/~import_infrastructure~",
 			},
 		},
 		ModelTrait: &v1.ModelTrait{
@@ -59,6 +60,7 @@ func Test_decoder_Decode(t *testing.T) {
 					"~model_path~",
 					"~module_target~",
 					"~import_infrastructure~",
+					"~dir_target~",
 				},
 			},
 			wantEncoded: []string{
@@ -70,13 +72,14 @@ func Test_decoder_Decode(t *testing.T) {
 				builder.ModelPath,
 				"branch",
 				"github.com/test",
+				"branch/github.com/test",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := decoder{
-				Construct: tt.fields.Constructor,
+				Construct: &tt.fields.Constructor,
 			}
 			for i, c := range tt.args.code {
 				decoded := d.Decode(c, builder.ModelTrait)

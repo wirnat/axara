@@ -251,7 +251,7 @@ func Test_generator_Generate(t *testing.T) {
 			g := generator{
 				GetModelTrait: reader.NewModelFileReader(),
 				ReaderMeta:    reader.NewReaderMeta(),
-				Decoder:       decoder.NewDecoder(tt.args.c),
+				Decoder:       decoder.NewDecoder(&tt.args.c),
 			}
 			tt.init()
 			err := g.Generate(tt.args.c)

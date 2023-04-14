@@ -16,6 +16,10 @@ func (d decoder) DecodeBuilder(builder v1.ModuleBuilder) (r v1.ModuleBuilder) {
 		},
 	}
 
+	for key, value := range builder.Meta {
+		r.Meta[key] = d.Decode(value, builder.ModelTrait)
+	}
+
 	for _, trait := range builder.Jobs {
 		moduleTrait := v1.Job{
 			Name:          d.Decode(trait.Name, builder.ModelTrait),
@@ -28,8 +32,10 @@ func (d decoder) DecodeBuilder(builder v1.ModuleBuilder) (r v1.ModuleBuilder) {
 		r.Jobs = append(r.Jobs, moduleTrait)
 	}
 
-	for key, val := range builder.Constructor.Meta {
-		r.Meta[key] = d.Decode(val, builder.ModelTrait)
+	if r.ModelTrait != nil {
+		for key, val := range builder.Constructor.Meta {
+			r.ModelMeta[key] = d.Decode(val, builder.ModelTrait)
+		}
 	}
 
 	return

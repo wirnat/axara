@@ -20,6 +20,7 @@ type ModelTrait struct {
 	ModelCamel  string       `json:"model_camel"`
 	ModelPlural string       `json:"model_plural"`
 	FileInfo    fs.FileInfo
+	ModelMeta   map[string]string
 }
 
 //getModelField get model fields

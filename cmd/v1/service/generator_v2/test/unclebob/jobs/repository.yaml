@@ -1,0 +1,23 @@
+jobs:
+  - name: ~module~ repository #job name
+    dir:  ~main_dir~/app1/repository/~module~_gorm #directory generate file
+    template: ~template~/repository_gorm.text #template for generate file
+    file_name: ~module~_repository.go #generated file name
+    active: true #active/nonactive job
+    tags:
+      #list of tag, that can executed by group of tag
+      - init
+      - repository
+
+  - name: ~module~ repository interface #job name
+    dir: ~main_dir~/app1/repository #directory generate file
+    template: ~template~/repository_interfaces.text #template for generate file
+    file_name: ~module~_repository.go #generated file name
+    active: true #active/nonactive job
+    tags:
+      #list of tag, that can executed by group of tag
+      - init
+      - repository
+      - repository_interface
+
+

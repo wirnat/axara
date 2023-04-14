@@ -65,7 +65,7 @@ func Test_decoderBuilder_DecodeBuilder(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			b := NewDecoder(builder.Constructor)
+			b := NewDecoder(&builder.Constructor)
 			result := b.DecodeBuilder(builder)
 			assert.Equalf(t, tt.wantR, result, "DecodeBuilder()")
 		})

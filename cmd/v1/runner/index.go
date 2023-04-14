@@ -22,7 +22,7 @@ func (a app) Generate() error {
 	}
 
 	modelReader := reader.NewModelFileReader()
-	_decoder := decoder.NewDecoder(*constructor)
+	_decoder := decoder.NewDecoder(constructor)
 	readerMeta := reader.NewReaderMeta()
 	_generator := generator_v2.NewGenerator(modelReader, _decoder, readerMeta)
 	err = _generator.Generate(*constructor)

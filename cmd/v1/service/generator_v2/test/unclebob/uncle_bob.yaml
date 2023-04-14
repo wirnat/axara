@@ -1,0 +1,20 @@
+key: ᬅᬓ᭄ᬱᬭ #init aksara key
+model_path: test/model  #init model dir
+module_name: github.com/wirnat/axara  #init module gomod
+models:
+    Branch: #Example Model1 Name
+      module: branch
+    Company: #Example Model2 Name
+      module: company
+
+meta:
+  main_dir: test
+  result_path: ~main_dir~/module
+  template: ~main_dir~/unclebob/templates
+  import_model: ~module_name~/cmd/v1/service/generator_v2/~model_path~
+   #you can fill other static meta here
+
+#jobs is queue of generator file
+include_jobs:
+  - test/unclebob/jobs/structure.yaml
+  - test/unclebob/jobs/repository.yaml

@@ -42,7 +42,6 @@ func Test_generator_Generate(t *testing.T) {
 							FileName:      "main.go",
 							Template:      "~template~/main.text",
 							Active:        true,
-							GenerateIn:    "route",
 							SingleExecute: true,
 						},
 					},
@@ -215,7 +214,6 @@ func Test_generator_Generate(t *testing.T) {
 							FileName:      "~model_snake~.go",
 							Template:      "~template~/usecase_interfaces.text",
 							Active:        true,
-							GenerateIn:    "route",
 							SingleExecute: false,
 						},
 					},
@@ -230,7 +228,7 @@ func Test_generator_Generate(t *testing.T) {
 				},
 			},
 			init: func(t2 *testing.T) {
-				global.ExecuteModels = []string{"Company", "Branch"}
+				global.Tags = nil
 			},
 			check: func(t2 *testing.T, err error) {
 				f, err := ioutil.ReadDir("../../spam/testing_env/modules")
@@ -244,13 +242,47 @@ func Test_generator_Generate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := generator{
 				ReaderModel: reader.NewModelFileReader(),
-				Decoder:     decoder.NewDecoder(tt.args.c),
+				Decoder:     decoder.NewDecoder(&tt.args.c),
 				ReaderMeta:  reader.NewReaderMeta(),
 			}
 			tt.init(t)
 
 			err := g.Generate(tt.args.c)
 			tt.check(t, err)
+		})
+	}
+}
+
+func Test_generator_Generate1(t *testing.T) {
+	tests := []struct {
+		name string
+		res  func(t2 *testing.T, err error)
+		init func(t *testing.T)
+	}{
+		{
+			name: "Test Generate",
+			res: func(t2 *testing.T, err error) {
+				global.Tags = []string{"Company", "Branch"}
+			},
+			init: func(t *testing.T) {
+				global.Tags = nil
+				global.ExecuteModels = []string{"Company", "Branch"}
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := v1.NewConstructor("test/unclebob/uncle_bob.yaml")
+			if err != nil {
+				panic(err)
+			}
+			r := reader.NewModelFileReader()
+			d := decoder.NewDecoder(c)
+			rm := reader.NewReaderMeta()
+			g := NewGenerator(r, d, rm)
+			tt.init(t)
+			err = g.Generate(*c)
+			tt.res(t, err)
 		})
 	}
 }

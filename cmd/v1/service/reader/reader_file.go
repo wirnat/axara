@@ -29,6 +29,7 @@ func (g file) GetModelTrait(file fs.FileInfo, c v1.Constructor) (modelTrait *v1.
 
 	//Collect all data from executed model model
 	scanner := bufio.NewScanner(fileE)
+	var modelName string
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -38,7 +39,7 @@ func (g file) GetModelTrait(file fs.FileInfo, c v1.Constructor) (modelTrait *v1.
 			if len(initiator) != 2 {
 				return nil, errors.InvalidModelFlag
 			}
-			modelName := initiator[1]
+			modelName = initiator[1]
 			re, err := regexp.Compile(`[^\w]`)
 			if err != nil {
 				return nil, err
@@ -55,6 +56,23 @@ func (g file) GetModelTrait(file fs.FileInfo, c v1.Constructor) (modelTrait *v1.
 					if err != nil {
 						return nil, err
 					}
+				}
+			}
+		}
+	}
+
+	if modelTrait != nil {
+		if modelTrait.ModelMeta == nil {
+			modelTrait.ModelMeta = make(map[string]string)
+		}
+	}
+
+	//Collect meta from config
+	for modelConf, modelConfMeta := range c.Models {
+		if modelName == modelConf {
+			for key, insideModelMeta := range modelConfMeta {
+				if modelTrait != nil {
+					modelTrait.ModelMeta[key] = insideModelMeta
 				}
 			}
 		}
