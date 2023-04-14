@@ -233,10 +233,10 @@ func Test_generator_Generate(t *testing.T) {
 				global.ExecuteModels = []string{"Company", "Branch"}
 			},
 			check: func(t2 *testing.T, err error) {
-				//f, err := ioutil.ReadDir("../../spam/testing_env/modules")
-				//if assert.Nil(t, err) && assert.Equal(t, 2, len(f)) {
-				//	os.RemoveAll("../../spam/testing_env/modules")
-				//}
+				f, err := ioutil.ReadDir("../../spam/testing_env/modules")
+				if assert.Nil(t, err) && assert.Equal(t, 2, len(f)) {
+					os.RemoveAll("../../spam/testing_env/modules")
+				}
 			},
 		},
 	}

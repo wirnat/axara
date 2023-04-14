@@ -9,15 +9,15 @@ import (
 )
 
 type Constructor struct {
-	GitAccessKey        string                       `json:"git_access_key" yaml:"git_access_key"`
-	Key                 string                       `json:"key" yaml:"key"`
-	ModelPath           string                       `json:"model_path" yaml:"model_path"`
-	ModuleName          string                       `json:"module_name" yaml:"module_name"`
-	Jobs                []Job                        `json:"jobs" yaml:"jobs"`
-	Meta                map[string]string            `json:"meta" yaml:"meta"`
-	IncludeModuleTraits []string                     `json:"include_module_traits"  yaml:"include_module_traits"`
-	IncludeTraits       []string                     `json:"include_traits" yaml:"include_traits"`
-	Models              map[string]map[string]string `json:"models" yaml:"models"`
+	GitAccessKey  string                       `json:"git_access_key" yaml:"git_access_key"`
+	Key           string                       `json:"key" yaml:"key"`
+	ModelPath     string                       `json:"model_path" yaml:"model_path"`
+	ModuleName    string                       `json:"module_name" yaml:"module_name"`
+	Jobs          []Job                        `json:"jobs" yaml:"jobs"`
+	Meta          map[string]string            `json:"meta" yaml:"meta"`
+	IncludeJobs   []string                     `json:"include_jobs"  yaml:"include_jobs"`
+	IncludeTraits []string                     `json:"include_traits" yaml:"include_traits"`
+	Models        map[string]map[string]string `json:"models" yaml:"models"`
 }
 
 func NewConstructor(p string) (b *Constructor, err error) {
@@ -26,7 +26,7 @@ func NewConstructor(p string) (b *Constructor, err error) {
 		return nil, err
 	}
 
-	for _, imt := range b.IncludeModuleTraits {
+	for _, imt := range b.IncludeJobs {
 		c := new(Constructor)
 		c, err = marshal(imt)
 		if err != nil {

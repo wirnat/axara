@@ -7,6 +7,7 @@ import (
 	er "github.com/wirnat/axara/cmd/v1/errors"
 	"github.com/wirnat/axara/cmd/v1/global"
 	"io/ioutil"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -32,16 +33,10 @@ func (g generator) Generate(c v1.Constructor) (err error) {
 		return er.NothingTodo
 	}
 
-	err = g.decodeConstructor(&c, nil)
-	if err != nil {
-		return err
-	}
-
 	//read model
-	global.Spinner.Title = "Read model path..."
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
-		return er.NoModelFound
+		log.Fatal(err.Error())
 	}
 
 	for _, job := range c.Jobs {
@@ -59,35 +54,34 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 	if !job.Active {
 		return nil
 	}
-
 	job = g.decodeJob(job, mt)
-
-	err := os.MkdirAll(g.Decoder.Decode(job.Dir, mt), os.ModePerm)
-	if err != nil {
-		fmt.Println("	❌" + err.Error())
-		return err
-	}
 
 	validTag := false
 
-	if global.Tags != nil {
+	if len(global.Tags) > 0 {
+		fmt.Println(global.Tags)
+
 		for _, inputTag := range global.Tags {
+			if job.Tags == nil {
+				validTag = false
+			}
 			for _, tag := range job.Tags {
 				if tag == inputTag {
 					validTag = true
 				}
 			}
 		}
-	} else {
-		goto startExecute
+
+		if !validTag {
+			return nil
+		}
 	}
 
-	if !validTag {
-		return nil
+	err := os.MkdirAll(g.Decoder.Decode(job.Dir, mt), os.ModePerm)
+	if err != nil {
+		fmt.Println("	❌" + err.Error())
+		return err
 	}
-
-startExecute:
-
 	generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
 	generatedFile = g.Decoder.Decode(generatedFile, mt)
 
@@ -95,6 +89,7 @@ startExecute:
 		Constructor: c,
 		ModelTrait:  mt,
 	}
+	moduleBuilder = g.DecodeBuilder(moduleBuilder)
 
 	tmt, err := template.ParseFiles(job.Template)
 	if err != nil {
@@ -135,7 +130,6 @@ startExecute:
 func (g generator) ExecPerModel(job v1.Job, c v1.Constructor) error {
 	var mt []*v1.ModelTrait
 
-	global.Spinner.Title = "Read model path..."
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
 		return er.NoModelFound
@@ -167,7 +161,7 @@ func (g generator) ExecPerModel(job v1.Job, c v1.Constructor) error {
 }
 
 func (g generator) decodeJob(job v1.Job, mt *v1.ModelTrait) v1.Job {
-	return v1.Job{
+	j := v1.Job{
 		Name:          g.Decode(job.Name, mt),
 		Dir:           g.Decode(job.Dir, mt),
 		FileName:      g.Decode(job.FileName, mt),
@@ -178,6 +172,7 @@ func (g generator) decodeJob(job v1.Job, mt *v1.ModelTrait) v1.Job {
 		GenerateIn:    g.Decode(job.GenerateIn, mt),
 		SingleExecute: job.SingleExecute,
 	}
+	return j
 }
 
 func (g generator) decodeConstructor(c *v1.Constructor, mt *v1.ModelTrait) (err error) {
@@ -210,7 +205,6 @@ func (g generator) decodeConstructor(c *v1.Constructor, mt *v1.ModelTrait) (err 
 	}
 
 	c.Jobs = jobs
-
 	return
 }
 
