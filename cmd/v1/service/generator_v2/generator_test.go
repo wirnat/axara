@@ -253,7 +253,7 @@ func Test_generator_Generate(t *testing.T) {
 	}
 }
 
-func Test_generator_Generate1(t *testing.T) {
+func Test_FullGenerate(t *testing.T) {
 	tests := []struct {
 		name string
 		res  func(t2 *testing.T, err error)
@@ -266,7 +266,7 @@ func Test_generator_Generate1(t *testing.T) {
 			},
 			init: func(t *testing.T) {
 				global.Tags = nil
-				global.ExecuteModels = []string{"Company", "Branch"}
+				global.ExecuteModels = []string{"Branch", "Company"}
 			},
 		},
 	}

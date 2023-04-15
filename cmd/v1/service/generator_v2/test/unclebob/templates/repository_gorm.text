@@ -6,6 +6,7 @@ import (
     "{{.Meta.import_request}}"
     "{{.Meta.import_response}}"
 	"{{.Meta.import_pagination}}"
+	"{{.Meta.import_trx_gorm}}"
 	"gorm.io/gorm"
 )
 
@@ -31,7 +32,7 @@ func (c {{.ModelCamel}}Gorm) Get(ctx context.Context, Param {{.ModelSnake}}_requ
 }
 
 func (c {{.ModelCamel}}Gorm) Store(ctx context.Context, {{.ModelSnake}} *model.{{.Model}}) error {
-	db, err := getTx(ctx)
+	db, err :=  gorm_transaction.GetTx(ctx)
 	if err == nil {
 		c.db = *db
 	}
@@ -40,7 +41,7 @@ func (c {{.ModelCamel}}Gorm) Store(ctx context.Context, {{.ModelSnake}} *model.{
 }
 
 func (c {{.ModelCamel}}Gorm) Update(ctx context.Context, {{.ModelSnake}} *model.{{.Model}}, condition ...{{.ModelSnake}}_request.{{.Model}}Param) error {
-	db, err := getTx(ctx)
+	db, err :=  gorm_transaction.GetTx(ctx)
 	if err == nil {
 		c.db = *db
 	}
@@ -53,15 +54,15 @@ func (c {{.ModelCamel}}Gorm) Update(ctx context.Context, {{.ModelSnake}} *model.
 }
 
 func (c {{.ModelCamel}}Gorm) Delete(ctx context.Context, uuid string) error {
-	db, err := getTx(ctx)
+	db, err :=  gorm_transaction.GetTx(ctx)
 	if err == nil {
 		c.db = *db
 	}
 	return c.db.Debug().Where("uuid=?", uuid).Delete(&model.{{.Model}}{}).Error
 }
 
-func (c {{.ModelCamel}}Gorm) Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) (response.{{.Model}}Paginate, error) {
-	res := response.{{.Model}}Paginate{
+func (c {{.ModelCamel}}Gorm) Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) ({{.ModelSnake}}_response.{{.Model}}Paginate, error) {
+	res := {{.ModelSnake}}_response.{{.Model}}Paginate{
 		Pagination: &paginator.Pagination{
 			PaginateReq: param.PaginateReq,
 		},
@@ -70,7 +71,7 @@ func (c {{.ModelCamel}}Gorm) Paginate(ctx context.Context, param {{.ModelSnake}}
 	filter(&c.db, param)
 	err := c.db.Debug().Scopes(paginator.PaginateV2(&res.Result, &c.db, res.Pagination)).Find(&res.Result).Error
 	if err != nil {
-		return response.{{.Model}}Paginate{}, err
+		return {{.ModelSnake}}_response.{{.Model}}Paginate{}, err
 	}
 
 	return res, nil

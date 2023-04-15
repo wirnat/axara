@@ -1,0 +1,127 @@
+captcha:
+    image_height: 0
+    image_width: 0
+    key_long: 0
+cors:
+    mode: ""
+    allow-origins: []
+    allow-methods: []
+    allow-headers: []
+    expose-headers: []
+    allow-credentials: false
+    whitelist: []
+email:
+    encryption: ""
+    from: sso@aksaratech.com
+    host: smtp.gmail.com
+    password: xsbaajxrqcyedrfg
+    port: "587"
+    username: it.aksaradev
+external_api_endpoint:
+    lottery_url: ""
+    ms_aggregation_url: ""
+    ms_product_url: ""
+    ms_secure_url: ""
+    ms_secure_url_frontend: ""
+google_map:
+    client_id: ""
+    key_token: AIzaSyDQV9pEIwhEXW7WsHGhRExE31Ov6vM4vXI
+    signature: ""
+jwt:
+    buffer_time: 0
+    expires_time: 0
+    issuer: ""
+    signing_key: ""
+kafka:
+    address: []
+    password: ""
+    prefix_group_name: ""
+    sasl_mechanism: ""
+    security_protocol: ""
+    ssl_ca_location: ""
+    username: ""
+keycloak:
+    base_path: ""
+    base_path_admin: ""
+    client_id: ms-clinic
+    client_secret: 7ZPnDIbRnMRdIp2MECkgMjQPnjvOaILS
+    client_uuid: ""
+    debug: false
+    key_cloak_ip: http://182.253.140.19:9000
+    realm: ms-klinik
+    retrospecting_token: false
+    sync_route_to_keycloak_server: false
+log:
+    max_size: 5
+    plugin: ""
+    compress: true
+    location: log
+    max_age: 30
+    max_backup: 10
+mysql:
+    path: localhost
+    port: "3306"
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    db_name: barberque
+    username: admin
+    password: "12345667"
+    max_idle_connection: 0
+    max_open_connection: 0
+    log_mode: ""
+    log_zap: false
+oss_ali:
+    access_key_id: LTAI5tMEqjJwnTjqECcA2K6d
+    access_key_secret: Hz1XXnDdgQbrwKthB5LRLKiR05g2Zh
+    base_path: ""
+    bucket_name: msclinic
+    bucket_url: msclinic.oss-ap-southeast-5.aliyuncs.com
+    endpoint: oss-ap-southeast-5.aliyuncs.com
+oss_aws:
+    access_key_id: ""
+    access_key_secret: ""
+    base_path: ""
+    bucket_name: ""
+    bucket_url: ""
+    project_id: ""
+    region: ""
+oss_google_storage:
+    access_key_secret: ""
+    base_path: ""
+    bucket_name: ""
+    bucket_url: ""
+    endpoint: ""
+    project_id: ""
+oss_local:
+    path: ""
+pgsql:
+    path: localhost
+    port: "5431"
+    config: sslmode=disable
+    db_name: ms_clinic
+    username: wira
+    password: wira
+    max_idle_connection: 5
+    max_open_connection: 10
+    log_mode: ""
+    log_zap: false
+redis:
+    address: ""
+    db: 0
+    password: ""
+system:
+    env: dev
+    address: 0.0.0.0:1111
+    oss_type: ""
+    db_type: pgsql
+    message_broker_type: ""
+    migration_source_path: ""
+    cs_phone: ""
+    cs_email: ""
+    minute_per_slot: 5
+    protocol: ""
+wablast:
+    endpoint: ""
+    token: ""
+wabotika:
+    endpoint: ""
+    token: ""

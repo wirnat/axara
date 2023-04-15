@@ -1,4 +1,4 @@
-package repository
+package {{.ModelSnake}}_repository
 
 import (
 	"context"
@@ -38,5 +38,5 @@ type {{.Model}}Delete interface {
 }
 
 type {{.Model}}Paginate interface {
-	Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) (response.{{.Model}}Paginate, error)
+	Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) ({{.ModelSnake}}_response.{{.Model}}Paginate, error)
 }

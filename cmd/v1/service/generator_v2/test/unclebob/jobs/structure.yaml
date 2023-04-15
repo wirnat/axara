@@ -1,6 +1,6 @@
 jobs:
 - name: main #job name
-  dir:  ~main_dir~/app1 #directory generate file
+  dir:  ~app_dir~ #directory generate file
   template: ~template~/main.text #template for generate file
   file_name: main.go #generated file name
   active: true #active/nonactive job
@@ -12,31 +12,27 @@ jobs:
     - structure
     - main
 
-- name: new route in main #job name
-  dir:  ~main_dir~/app1 #directory generate file
-  template: ~template~/app.text #template for generate file
-  file_name: main.go #generated file name
+
+- name: cmd #job name
+  dir:   ~app_dir~/cmd #directory generate file
+  template: ~template~/cmd_app.text #template for generate file
+  file_name: my_app.go #generated file name
   active: true #active/nonactive job
   single_execute: true
-  generate_in: app #replace code @GenerateIn [key] in file with this job
-  tags:
-    #list of tag, that can executed by group of tag
-    - structure
-    - main
-    - init route
-    - init
-
-
-- name: end route in main #job name
-  dir:  ~main_dir~/app1 #directory generate file
-  template: ~template~/end_app.text #template for generate file
-  file_name: main.go #generated file name
-  active: true #active/nonactive job
-  single_execute: true
-  generate_in: endApp #replace code @GenerateIn [key] in file with this job
   tags:
     #list of tag, that can executed by group of tag
     - structure
     - init
-    - main
-    - end_route
+    - cmd
+
+- name: inject dependency #job name
+  dir:   ~app_dir~/cmd #directory generate file
+  template: ~template~/dependencies.text #template for generate file
+  file_name: my_app.go #generated file name
+  active: true #active/nonactive job
+  generate_in: dependencies #replace code @GenerateIn [key] in file with this job
+  tags:
+    #list of tag, that can executed by group of tag
+    - structure
+    - init
+    - dependency
