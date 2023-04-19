@@ -1,21 +1,14 @@
 
 # Axara
 
-Make your life easier, this CLI will autogenerate code and architecture base on Go Template and Model.
+Make your life easier, this CLI will autogenerate code and architecture base on Template and Model.
 
 
 
 
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
+[![MIT License](https://img.shields.io/github/license/wirnat/axara?style=flat-square)](https://github.com/wirnat/axara/blob/main/License)
 
 
-
-
-
-
-https://user-images.githubusercontent.com/35485901/201606600-1d0fd3df-384e-4c4b-b05f-cea9d39f14d0.mp4
 
 
 
@@ -23,13 +16,15 @@ https://user-images.githubusercontent.com/35485901/201606600-1d0fd3df-384e-4c4b-
 
 - Easy to use and learn
 
-- Architecture Friendly, easy to build layer that repeatable base on the model that choosed as a module
+- Can be used to generate boilerplate, architectural pattern, layer, small module, and code file
 
-- Generate your repeatable code such as repository, mock, delivery, and other some unique repeatable task.
+- Generate your repeatable code such as repository, mock, delivery, view, and other some unique repeatable task.
 
 - Speed up your develop process and make you only focus to the business logic
 
 - Customable variable for the template
+
+- Powerfull meta/variable feature
 
 - Can be used to build your favorite boilerplate
 
@@ -41,7 +36,26 @@ https://user-images.githubusercontent.com/35485901/201606600-1d0fd3df-384e-4c4b-
 
 - Improve Monolith modular development speed until 80%
 
-## Documentation
-[https://wirnat.github.io/aksara-cli-doc/](https://wirnat.github.io/aksara-cli-doc/)
+- Fully Customable Template
+
+- Can inject code to existing file
+
+- Template Market integrated with github/gitlab
+
+- You can choose which job will run when generate
+
+## Instalation
+```bash
+  go install github.com/wirnat/axara@latest
+```
+## Grab Template
+```bash
+  axara get [Template Git URL] [Result Directory]
+```
+## Generate 
+```bash
+  axara generate [template config yaml/json] -g [list of job tags]
+```
+
 
 
