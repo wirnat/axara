@@ -5,6 +5,7 @@ module_name: github.com/wirnat/axara  #init module gomod
 models:
     Branch:
       module: branch
+
     Company:
       module: company
 
@@ -13,8 +14,9 @@ meta:
   app_dir: test/app
   app: github.com/wirnat/axara
   import: ~app~/cmd/v1/service/generator_v2/~app_dir~
+  this: ~main_dir~/unclebob
 
-  template: ~main_dir~/unclebob/templates
+  template: ~this~/templates
   infrastructure_dir: ~app_dir~/infrastructure
   import_model: ~import~/domain/model
   import_infrastructure: ~import~/infrastructure
@@ -33,10 +35,10 @@ meta:
 
 #jobs is queue of generator file
 include_jobs:
-  - test/unclebob/jobs/structure.yaml
-  - test/unclebob/jobs/repository.yaml
-  - test/unclebob/jobs/param.yaml
-  - test/unclebob/jobs/infrastructure.yaml
-  - test/unclebob/jobs/response.yaml
-  - test/unclebob/jobs/usecase.yaml
-  - test/unclebob/jobs/delivery.yaml
+  - ~this~/jobs/structure.yaml
+  - ~this~/jobs/repository.yaml
+  - ~this~/jobs/param.yaml
+  - ~this~/jobs/infrastructure.yaml
+  - ~this~/jobs/response.yaml
+  - ~this~/jobs/usecase.yaml
+  - ~this~/jobs/delivery.yaml

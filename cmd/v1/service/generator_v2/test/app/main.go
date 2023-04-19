@@ -1,16 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
-	echoSwagger "github.com/swaggo/echo-swagger"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/cmd"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/docs"
-	_ "github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/docs"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/infrastructure/datastore"
 	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/infrastructure/env"
 	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/infrastructure/logger"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/infrastructure/middleware/echo_middleware"
+	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/cmd"
+	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/infrastructure/datastore"
+	_ "github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/docs"
+	echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/docs"
+	"fmt"
 )
 
 //go:generate go mod tidy
@@ -35,14 +34,14 @@ func main() {
 	db := datastore.LoadDBGorm()
 	e := echo.New()
 	e.Use(echo_middleware.AllowCors())
-	e.HideBanner = true
+	e.HideBanner=true
 	app := cmd.NewMyApp(*e, *db)
 	app.Init()
-	for _, route := range e.Routes() {
-		fmt.Printf("%s\t::\t%s\n", route.Method, route.Path)
-	}
-	initSwagger(e)
-	e.Start(env.ENV.System.Address)
+    for _, route := range e.Routes() {
+    	fmt.Printf("%s\t::\t%s\n", route.Method, route.Path)
+    }
+    initSwagger(e)
+  	e.Start(env.ENV.System.Address)
 }
 
 func initSwagger(engine *echo.Echo) {
@@ -54,3 +53,4 @@ func initSwagger(engine *echo.Echo) {
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	engine.GET("doc/*any", echoSwagger.WrapHandler)
 }
+

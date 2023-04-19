@@ -2,12 +2,6 @@ package cmd
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/delivery/branch_delivery/branch_http_1"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/delivery/company_delivery/company_http_1"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/repository/branch_repository/branch_gorm"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/repository/company_repository/company_gorm"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/usecase/branch_usecase/branch_usecase_v1"
-	"github.com/wirnat/axara/cmd/v1/service/generator_v2/test/app/usecase/company_usecase/company_usecase_v1"
 	"gorm.io/gorm"
 )
 

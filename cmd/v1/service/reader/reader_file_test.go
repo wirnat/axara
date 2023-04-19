@@ -10,7 +10,7 @@ import (
 )
 
 func Test_file_GetModelTrait(t *testing.T) {
-	f, err := os.Stat("../..//spam/testing_env/model/company.go")
+	f, err := os.Stat("test/company.go")
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +33,7 @@ func Test_file_GetModelTrait(t *testing.T) {
 				file: f,
 				c: v1.Constructor{
 					Key:        "ᬅᬓ᭄ᬱᬭ",
-					ModelPath:  "testing_env/model",
+					ModelPath:  "test",
 					ModuleName: "github.com",
 					Jobs: []v1.Job{
 						{

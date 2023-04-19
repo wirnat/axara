@@ -9,7 +9,7 @@ type BranchStore struct {
 	  CreatedAt time.Time `json:"created_at" `
 	  UpdatedAt time.Time `json:"updated_at" `
 	  DeletedAt *time.Time `json:"deleted_at" `
-	  CompanyID int64 `json:"company_id" `
+	  CompanyID int64 `json:"company_id" validate:"required"`
 	  Name string `json:"name" validate:"required"`
 	  Description *string `json:"description" `
 }

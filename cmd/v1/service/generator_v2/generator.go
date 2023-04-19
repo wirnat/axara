@@ -2,17 +2,23 @@ package generator_v2
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"github.com/iancoleman/strcase"
 	v1 "github.com/wirnat/axara/cmd/v1"
 	er "github.com/wirnat/axara/cmd/v1/errors"
 	"github.com/wirnat/axara/cmd/v1/global"
+	"gopkg.in/src-d/go-git.v4"
 	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
 	"strings"
 	"text/template"
+	"time"
 )
+
+var jobDone int
 
 type generator struct {
 	v1.ReaderModel
@@ -33,18 +39,48 @@ func (g generator) Generate(c v1.Constructor) (err error) {
 		return er.NothingTodo
 	}
 
+	if len(global.Tags) < 1 {
+		return fmt.Errorf("please run specific tags, ex: -g repository, usecase")
+	}
+
 	//read model
 	files, err := ioutil.ReadDir(c.ModelPath)
 	if len(files) < 1 || err != nil {
 		log.Fatal(err.Error())
 	}
+	totalJob := len(c.Jobs)
+	startTime := time.Now()
 
-	for _, job := range c.Jobs {
+	for i, job := range c.Jobs {
 		if job.SingleExecute {
-			g.ExecOne(job, c, nil)
+			err = g.ExecOne(job, c, nil)
+			if err != nil {
+				log.Fatalf(" ❌ " + err.Error())
+			}
 		} else {
-			g.ExecPerModel(job, c)
+			err = g.ExecPerModel(job, c)
+			if err != nil {
+				log.Fatalf(" ❌  " + err.Error())
+			}
 		}
+		//print progress bar cmd
+		fmt.Print("Write the code: [")
+		for j := 0; j <= totalJob; j++ {
+			if j <= i {
+				fmt.Print("#")
+			} else {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Print("\r")
+	}
+	elapsedTime := time.Since(startTime)
+	elapsedSeconds := int(elapsedTime.Milliseconds())
+
+	if jobDone == 0 {
+		fmt.Printf("%v job done, maybe your tag not found in jobs", jobDone)
+	} else {
+		fmt.Printf("%v job done, in %v microseconds ", jobDone, elapsedSeconds)
 	}
 
 	return nil
@@ -58,9 +94,8 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 
 	validTag := false
 
+	//check tags
 	if len(global.Tags) > 0 {
-		fmt.Println(global.Tags)
-
 		for _, inputTag := range global.Tags {
 			if job.Tags == nil {
 				validTag = false
@@ -77,9 +112,21 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 		}
 	}
 
+	//check override
+	generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
+	generatedFile = g.Decoder.Decode(generatedFile, mt)
+	canOverride := g.validateOverride(generatedFile)
+	if !canOverride {
+		return nil
+	}
+
+	//isCleanCommit := g.validateCommit()
+	//if !isCleanCommit {
+	//	return fmt.Errorf("uncommit change found, please commit your project before start generate the template")
+	//}
+
 	err := os.MkdirAll(g.Decoder.Decode(job.Dir, mt), os.ModePerm)
 	if err != nil {
-		fmt.Println("	❌" + err.Error())
 		return err
 	}
 
@@ -89,35 +136,28 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 	}
 
 	moduleBuilder = g.DecodeBuilder(moduleBuilder)
-	generatedFile := fmt.Sprintf("%v/%v", job.Dir, job.FileName)
-	generatedFile = g.Decoder.Decode(generatedFile, mt)
 
 	tmt, err := template.ParseFiles(job.Template)
 	if err != nil {
-		fmt.Println("❌ " + err.Error())
 		return err
 	}
 
 	if job.GenerateIn != "" {
 		err = injectCode(job, generatedFile, *tmt, moduleBuilder)
 		if err != nil {
-			fmt.Println("	❌ " + err.Error())
 			return err
 		}
-		fmt.Println(fmt.Sprintf("	✅  %v \n", job.Name))
+		jobDone++
 		return nil
 	}
 
 	fileTrait, err := os.Create(generatedFile)
 	if err != nil {
-		fmt.Println("❌ " + err.Error())
 		return err
-
 	}
 
 	err = tmt.Execute(fileTrait, moduleBuilder)
 	if err != nil {
-		fmt.Println("	❌ " + err.Error())
 		return err
 	}
 	err = fileTrait.Close()
@@ -125,7 +165,7 @@ func (g generator) ExecOne(job v1.Job, c v1.Constructor, mt *v1.ModelTrait) erro
 		panic(err)
 	}
 
-	fmt.Println(fmt.Sprintf("	✅  %v \n", job.Name))
+	jobDone++
 	return nil
 }
 
@@ -142,6 +182,7 @@ func (g generator) ExecPerModel(job v1.Job, c v1.Constructor) error {
 		if file.IsDir() {
 			continue
 		}
+
 		modelTrait, err := g.GetModelTrait(file, c)
 		if err != nil {
 			return err
@@ -159,7 +200,10 @@ func (g generator) ExecPerModel(job v1.Job, c v1.Constructor) error {
 			Constructor: c,
 			ModelTrait:  m,
 		})
-		g.ExecOne(job, builder.Constructor, builder.ModelTrait)
+		err = g.ExecOne(job, builder.Constructor, builder.ModelTrait)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -234,4 +278,68 @@ func injectCode(job v1.Job, generatedFile string, tmt template.Template, builder
 		return err
 	}
 	return nil
+}
+
+func (g generator) validateOverride(generatedFile string) bool {
+	if !global.OverrideAll {
+		if _, err := os.Stat(generatedFile); !errors.Is(err, os.ErrNotExist) {
+			var input string
+
+			fmt.Println(generatedFile+" is already exist, do you want to override?", "Y=Yes", "N=No", "YA=Yes for all")
+			_, err := fmt.Scanln(&input)
+			if err != nil {
+				fmt.Println("	something is wrong")
+				return true
+			}
+
+			input = strcase.ToSnake(input)
+			if input == "ya" {
+				global.OverrideAll = true
+				return true
+			}
+			if input == "no" || input == "n" {
+				return false
+			}
+			if input != "yes" && input != "y" && input != "ya" {
+				return true
+			}
+		}
+	}
+
+	return true
+}
+
+func (g generator) validateCommit() bool {
+	// Buka repositori Git
+	r, err := git.PlainOpen(".")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Ambil working tree
+	w, err := r.Worktree()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Cek status perubahan dalam working tree
+	status, err := w.Status()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Cek apakah ada perubahan yang belum dicommit
+	hasUncommittedChanges := false
+	for _, s := range status {
+		if s.Staging != git.Unmodified || s.Worktree != git.Unmodified {
+			hasUncommittedChanges = true
+			break
+		}
+	}
+
+	if hasUncommittedChanges {
+		return false
+	} else {
+		return true
+	}
 }

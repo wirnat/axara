@@ -9,3 +9,7 @@ type ReaderModel interface {
 type ReaderMeta interface {
 	GetMeta(file fs.FileInfo, c Constructor, modelName string) (meta map[string]string, err error)
 }
+
+type ReaderConstructor interface {
+	Read(p string) (b *Constructor, err error)
+}

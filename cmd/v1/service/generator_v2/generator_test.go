@@ -262,17 +262,19 @@ func Test_FullGenerate(t *testing.T) {
 		{
 			name: "Test Generate",
 			res: func(t2 *testing.T, err error) {
-				global.Tags = []string{"Company", "Branch"}
+				assert.Nil(t2, err)
 			},
 			init: func(t *testing.T) {
-				global.Tags = nil
+				global.Tags = []string{"init"}
 				global.ExecuteModels = []string{"Branch", "Company"}
+				global.OverrideAll = true
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, err := v1.NewConstructor("test/unclebob/uncle_bob.yaml")
+			cr := reader.NewReaderConstruct()
+			c, err := cr.Read("test/unclebob/uncle_bob.yaml")
 			if err != nil {
 				panic(err)
 			}
