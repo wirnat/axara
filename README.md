@@ -184,9 +184,9 @@ include_jobs:
 
 #### 4. Execute
 ```bash
-  axara generate templates/clean-architecture/index.yaml -g init
+  axara generate templates/clean-architecture/index.yaml -g init --models Company,Branch
 ```
-The command will execute tasks that are tagged as 'init'
+The command will execute tasks that are tagged as 'init' and loop the job in every Company and Branch Model
 
 ## Command
 ## How its Work?
