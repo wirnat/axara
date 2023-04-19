@@ -1,0 +1,9 @@
+package main
+
+func main() {
+	//@Generate app
+
+	//@Generate route
+
+	//@Generate endApp
+}

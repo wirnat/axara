@@ -1,0 +1,23 @@
+key: ᬅᬓ᭄ᬱᬭ #init aksara key
+model_path: model  #init model dir
+module_name: my-app  #init module gomod
+models:
+    Model1: #Example Model1 Name
+      my_meta: meta_value_or_whatever
+    Model2: #Example Model2 Name
+      my_meta: meta_value_or_whatever
+meta:
+  result_path: module
+   #you can fill other static meta here
+
+#jobs is queue of generator file
+jobs:
+  - name:  #job name
+    dir:  #directory generate file
+    template:  #template for generate file
+    file_name:  #generated file name
+    active:  #active/nonactive job
+    generate_in:  #replace code @GenerateIn [key] in file with this job
+    tags:
+      #list of tag, that can executed by group of tag
+      - repo or whatever

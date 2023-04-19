@@ -1,0 +1,24 @@
+key: ᬅᬓ᭄ᬱᬭ
+model_path: example/model
+module_name: github.com/wirnat/axara
+execute_models:
+  Company:
+    module: company
+  Branch:
+    module: branch
+meta:
+  result_path: module
+include_module_traits:
+  - testing_env/module_trait.yaml
+jobs:
+  - name: "~model_snake~ repository interfaces"
+    dir: "~result_path~/~model_snake~/repository/~model_snake~_repository"
+    template: template/clean_architecture/repository_interfaces.text
+    file_name: "~model_snake~.go"
+    active: true
+    bind_model: true
+    generate_in: route
+    tags:
+      - repo
+      - init
+

@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 WIRA <wirajus@gmail.com>
-*/
 package main
 
 import (
