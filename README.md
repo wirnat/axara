@@ -239,6 +239,17 @@ The template is the main code generator that is executed by each job. This templ
 
 For more information about text template https://pkg.go.dev/text/template
 ### Model
+When you want to create jobs based on models, such as CRUD repositories or similar entities that have dynamic variables based on the model, the model is the main component that needs to be linked to your generator.
+
+#### Step to Setup Model
+1. Add //@Register [model name] after close bracket model object
+2. Declare it in config:
+	```yaml
+	models:
+		Company:
+		#you can add model meta here
+	```
+4. When performing the execution, use the "--models Company,Branch" flag to select which model will be executed.
 
 ### Meta
 
