@@ -1,7 +1,7 @@
 
 # Axara
 
-Make your life easier, this CLI will autogenerate code and architecture base on Template and Model.
+Make your life easier, this CLI will autogenerate code or architecture base on Template and Model.
 
 
 
@@ -15,7 +15,7 @@ Make your life easier, this CLI will autogenerate code and architecture base on 
 
 - Easy to use and learn
 
-- Can be used to generate boilerplate, architectural pattern, layer, small module, and code file
+- Can be used to CRUD code, generate boilerplate, architectural pattern, layer, small module, and code file
 
 - Generate your repeatable code such as repository, mock, delivery, view, and other some unique repeatable task.
 
@@ -23,9 +23,9 @@ Make your life easier, this CLI will autogenerate code and architecture base on 
 
 - Customable variable for the template
 
-- Powerfull meta/variable feature
+- Customable Template
 
-- Can be used to build your favorite boilerplate
+- Orchestrate generated file location in jobs, so you can create your own template architecture
 
 - Various template has availabled, such as Clean Architecture, Monorepo Clean Architecture, even repository style code has availabled for speed up your develop.
 
@@ -34,8 +34,6 @@ Make your life easier, this CLI will autogenerate code and architecture base on 
 - Get template from github direct from axara command
 
 - Improve Monolith modular development speed until 80%
-
-- Fully Customable Template
 
 - Can inject code to existing file
 
@@ -143,9 +141,9 @@ model_path: model  #init model dir
 lang: golang #available for now: golang, typescript, js, dart
 models:
     Company:
-      company: company
+      module: company
     Branch:
-      branch: branch
+      module: branch
 
 meta:
   main_dir: .
@@ -188,9 +186,38 @@ include_jobs:
 ```
 The command will execute tasks that are tagged as 'init' and loop the job in every Company and Branch Model
 
-## Command
+## Command & Flag
+
+| Command | Description |
+|---------|--------------|
+| completion  | Generate the autocompletion script for the specified shell |
+| generate  |  Auto generate Design Pattern |
+| get  |  Get CLI Item from github |
+| help  |  Help about any command |
+| new  |  New Axara Config file |
+|version | Check Version|
+
+| Flag | Short | Description |
+|---------|---------|---------|
+| --help | -h  | help for axara |
+| --models strings |  -m |list of execute models |
+| --tags string | -g  |List of execute traits/jobs |
+
+
 ## How its Work?
+Unlike typical CRUD generators, Axara CLI generates highly customizable code base on templates, where templates have dynamic variables from each job in the configuration file. The location of the generated files can also be specified in the configuration file, specifically in the job settings.
+
 ### Config File
+| Key | Value Type | Description |
+|---------|--------------|-------|
+|key | string | this is package key for axara cli, by default just fill with ᬅᬓ᭄ᬱᬭ|
+|model_path | string | project model directory|
+|lang | string | project language, available: go, typescript |
+|models | map[string][map]string | mount your model to config and add dynamic meta variable in the model that's can used in config file / templates|
+|meta | map[string]string | add global meta variable that's can used in config file / templates |
+|jobs | []Job | List of jobs to be executed during the execution later |
+|include_jobs | []string | you can seperate the list of jobs file and add the file path here |
+
 ### Jobs
 ### Template
 ### Model
