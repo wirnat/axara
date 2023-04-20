@@ -208,6 +208,7 @@ The command will execute tasks that are tagged as 'init' and loop the job in eve
 Unlike typical CRUD generators, Axara CLI generates highly customizable code base on templates, where templates have dynamic variables from each job in the configuration file. The location of the generated files can also be specified in the configuration file, specifically in the job settings.
 
 ### Config File
+The config file is a configuration file as well as the main executor and orchestrator in this generator, where it determines what jobs are executed, variables that are declared, and other needs of the generator.
 | Key | Value Type | Description |
 |---------|--------------|-------|
 |key | string | this is package key for axara cli, by default just fill with ᬅᬓ᭄ᬱᬭ|
@@ -219,8 +220,26 @@ Unlike typical CRUD generators, Axara CLI generates highly customizable code bas
 |include_jobs | []string | you can seperate the list of jobs file and add the file path here |
 
 ### Jobs
+The executor will run the configuration file and read the tasks to be performed. The tasks referred to here include creating files (with directory paths), generating code in files based on templates specified in the job, and assigning tags to jobs to organize which jobs will be executed during generation.
+The tasks can be executed either once or per declared model, If executed per model, each model will have its own jobs with their respective meta/variables.
+
+| Key | Value Type | Description | Example |
+|---------|--------|---------|---------|
+| name | string | name of job | repository |
+| dir | string | file directory | app |
+| template | string| The template file path that will be compiled into code | templates/repository.text |
+| file_name |string| The name of generated file/injected file | repository.go |
+| active |bool| job status if false it will passed | false |
+| single_execute |bool| If set true the job will not looping per model, and it only executed once | true |
+| generate_in |string| replace @Generate [name] with compiled template code   | route |
+| tags |[]string| declared which tags will execute the job   | - init |
+
 ### Template
+The template is the main code generator that is executed by each job. This template is read using Go templates, so users can utilize Go-template features to create/modify the template. Variables used in the template are extracted from meta-data in the config file, whether it is from global meta or model meta.
+
+For more information about text template https://pkg.go.dev/text/template
 ### Model
+
 ### Meta
 
 
