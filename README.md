@@ -244,14 +244,41 @@ When you want to create jobs based on models, such as CRUD repositories or simil
 #### Step to Setup Model
 1. Add //@Register [model name] after close bracket model object
 2. Declare it in config:
-	```yaml
-	models:
-		Company:
-		#you can add model meta here
-	```
+ ```yaml
+  models:
+    Company:
+      mymeta: company
+    Branch:
+      mymeta: branch
+      #you can add other meta
+  ```
 4. When performing the execution, use the "--models Company,Branch" flag to select which model will be executed.
 
 ### Meta
+If the model acts as the main object, job as the orchestrator of code, files, and templates, then meta is a variable that can be called in both the config and the template. Meta is declared in two places, either in the model as shown above or in the meta key in the config.
 
+If meta is declared in the model, then when the job is generating code for that model, the variable will be dynamic based on the declared model meta.
+
+On the other hand, meta declared in the meta key in the config is static and not influenced by which model job is currently being executed.
+
+Meta can be called in subsequent meta, even within values in jobs, it can be used as a tool to ensure configuration consistency. Meta can also be called in templates, but calling meta in template files has a difference compared to calling meta in config files.
+
+Meta called in config file:
+nama_meta
+
+Meta called in template file:
+{{.Meta.nama_meta}}
+
+for model you can call directly without registering it to meta, you can directly use it in template
+```text
+{{.Model}}
+```
+
+or 
+
+yaml
+```yaml
+~model~
+```
 
 
