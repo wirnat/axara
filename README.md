@@ -237,6 +237,53 @@ The tasks can be executed either once or per declared model, If executed per mod
 ### Template
 The template is the main code generator that is executed by each job. This template is read using Go templates, so users can utilize Go-template features to create/modify the template. Variables used in the template are extracted from meta-data in the config file, whether it is from global meta or model meta.
 
+example:
+```text
+package {{.ModelSnake}}_repository
+
+import (
+	"context"
+	"{{.Meta.import_model}}"
+	"{{.Meta.import_request}}"
+	"{{.Meta.import_response}}"
+)
+
+type {{.Model}} interface {
+	{{.Model}}Fetch
+	{{.Model}}Get
+	{{.Model}}Store
+	{{.Model}}Update
+	{{.Model}}Delete
+	{{.Model}}Paginate
+}
+
+type {{.Model}}Fetch interface {
+	Fetch(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Param) ([]model.{{.Model}}, error)
+}
+
+type {{.Model}}Get interface {
+	Get(ctx context.Context, Param {{.ModelSnake}}_request.{{.Model}}Param) (model.{{.Model}}, error)
+}
+
+type {{.Model}}Store interface {
+	Store(ctx context.Context, {{.Model}} *model.{{.Model}}) error
+}
+
+type {{.Model}}Update interface {
+	Update(ctx context.Context, {{.Model}} *model.{{.Model}}, condition ...{{.ModelSnake}}_request.{{
+	.Model}}Param) error
+}
+
+type {{.Model}}Delete interface {
+	Delete(ctx context.Context, uuid string) error
+}
+
+type {{.Model}}Paginate interface {
+	Paginate(ctx context.Context, param {{.ModelSnake}}_request.{{.Model}}Param) ({{.ModelSnake}}_response.{{.Model}}Paginate, error)
+}
+
+```
+
 For more information about text template https://pkg.go.dev/text/template
 ### Model
 When you want to create jobs based on models, such as CRUD repositories or similar entities that have dynamic variables based on the model, the model is the main component that needs to be linked to your generator.
@@ -254,6 +301,48 @@ When you want to create jobs based on models, such as CRUD repositories or simil
   ```
 4. When performing the execution, use the "--models Company,Branch" flag to select which model will be executed.
 
+### Model Fields
+You can get all the model fields/property that you have registered (with the comment @Register [model name] at the end of the model line). ModelField is very useful in text templates when we need the required fields to create the code.
+
+You also can add meta in every field, for example i want to add meta validate_store which each field that is has this meta will set validate:"required" in param_store template.
+
+```go
+package model
+
+type Branch struct {
+	BaseModel
+	CompanyID   int64   `json:"company_id"`
+	Name        string  `json:"name"` //@meta validate_store:true
+	Description *string `json:"description"`
+}
+
+//@Register Branch
+```
+
+model fields usage in template text example:
+```text
+package {{.ModelSnake}}_request
+import(
+    "time"
+)
+
+type {{.Model}}Store struct {
+	{{- range $m:=.ModelFields }}
+	{{- if ne $m.Meta.autofill "true"}}
+	  {{$m.Name }} {{if $m.IsPtr}}*{{$m.Type }}{{else}}{{$m.Type }}{{end}} `json:"{{$m.Json -}}" {{if eq $m.Meta.validate_store "true"}}validate:"required"{{end}}`
+	{{- end}}
+    {{- end}}
+}
+
+```
+
+In the above template, we are using variables that are provided in the Axara CLI, namely:
+
+Model: the model name, for example, Company
+ModelSnake: the model name in snakecase, for example, company
+ModelPlural: the pluralized model name, for example, companies.
+
+
 ### Meta
 If the model acts as the main object, job as the orchestrator of code, files, and templates, then meta is a variable that can be called in both the config and the template. Meta is declared in two places, either in the model as shown above or in the meta key in the config.
 
@@ -267,18 +356,15 @@ Meta called in config file:
 nama_meta
 
 Meta called in template file:
-{{.Meta.nama_meta}}
-
-for model you can call directly without registering it to meta, you can directly use it in template
 ```text
-{{.Model}}
+{{.Meta.meta_key}} ##use snake case key
 ```
 
-or 
+in config file you can call meta using ~~ tag:
 
 yaml
 ```yaml
-~model~
+~meta_key~ 
 ```
 
 
