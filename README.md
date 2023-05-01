@@ -43,6 +43,12 @@ Make your life easier, this CLI will autogenerate code or architecture base on T
 ```bash
   go install github.com/wirnat/axara@latest
 ```
+## Instalation in non Go project
+first, download axara binary and run command below:
+```bash
+sudo cp axara /usr/local/bin/
+chmod u+x axara
+```
 ## Grab Template
 ```bash
   axara get [Template Git URL] [Result Directory]
