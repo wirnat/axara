@@ -300,10 +300,9 @@ When you want to create jobs based on models, such as CRUD repositories or simil
  ```yaml
   models:
     Company:
-      mymeta: company
+      #you can add ModelMeta here
     Branch:
-      mymeta: branch
-      #you can add other meta
+      #you can add ModelMeta here
   ```
 4. When performing the execution, use the "--models Company,Branch" flag to select which model will be executed.
 
@@ -363,7 +362,7 @@ nama_meta
 
 Meta called in template file:
 ```text
-{{.Meta.meta_key}} ##use snake case key
+{{.Meta.meta_key}}
 ```
 
 in config file you can call meta using ~~ tag:
@@ -373,4 +372,28 @@ yaml
 ~meta_key~ 
 ```
 
+### ModelMeta
+If you want to make dynamic meta base on model, you can declare meta in ModelMeta.
+
+ ```yaml
+  models:
+    Company:
+      model_plural: Companies
+      model_singular: Company
+    Branch:
+      model_plural: Branches
+      model_singular: Branch
+  ```
+
+and call it in template file: 
+```text
+{{.ModelMeta.model_plural}} ##this will be Companies/Branches base on scanned model
+```
+
+in config file you can call meta using ~~ tag:
+
+yaml
+```yaml
+~model_plural~ ##this will be Companies/Branches base on scanned model
+```
 
