@@ -1,4 +1,4 @@
-package {{.ModelSnake}}_gorm
+package {{.ModelMeta.module}}_gorm
 
 import (
 	"context"

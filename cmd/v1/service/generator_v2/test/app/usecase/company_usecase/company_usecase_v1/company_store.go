@@ -17,12 +17,6 @@ func NewCompanyStoreUsecase(companyStore company_repository.CompanyStore) *compa
 }
 
 func (u companyStoreUsecase) Store(ctx context.Context, param company_request.CompanyStore) (r model.Company, err error) {
-        r.ID = param.ID
-        r.UUID = uuid.New().String()
-        r.CreatedAt = param.CreatedAt
-        r.UpdatedAt = param.UpdatedAt
-        r.DeletedAt = param.DeletedAt
-        r.Name = param.Name
 
     	err = u.companyStore.Store(ctx, &r)
     	return

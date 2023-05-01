@@ -133,7 +133,6 @@ func (r readerFileTs) getMTFromTSFile(file *os.File, modelName string) (m *v1.Mo
 				for _, m := range metf {
 					meta := strings.Split(m, ":")
 					mf.Meta[meta[0]] = meta[1]
-					fmt.Println(mf)
 				}
 			}
 			m.ModelFields = append(m.ModelFields, mf)

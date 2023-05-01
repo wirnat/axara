@@ -255,9 +255,10 @@ func Test_generator_Generate(t *testing.T) {
 
 func Test_FullGenerate(t *testing.T) {
 	tests := []struct {
-		name string
-		res  func(t2 *testing.T, err error)
-		init func(t *testing.T)
+		name       string
+		res        func(t2 *testing.T, err error)
+		init       func(t *testing.T)
+		configFile string
 	}{
 		{
 			name: "Test Generate",
@@ -269,16 +270,29 @@ func Test_FullGenerate(t *testing.T) {
 				global.ExecuteModels = []string{"Branch", "Company"}
 				global.OverrideAll = true
 			},
+			configFile: "test/unclebob/uncle_bob.yaml",
+		},
+		{
+			name: "Test Generate TS",
+			res: func(t2 *testing.T, err error) {
+				assert.Nil(t2, err)
+			},
+			init: func(t *testing.T) {
+				global.Tags = []string{"init"}
+				global.ExecuteModels = []string{"Company"}
+				global.OverrideAll = true
+			},
+			configFile: "test/unclebob/uncle_bob_ts.yaml",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cr := reader.NewReaderConstruct()
-			c, err := cr.Read("test/unclebob/uncle_bob.yaml")
+			c, err := cr.Read(tt.configFile)
 			if err != nil {
 				panic(err)
 			}
-			r := reader.NewModelFileReader()
+			r := reader.NewReaderFileTs()
 			d := decoder.NewDecoder(c)
 			rm := reader.NewReaderMeta()
 			g := NewGenerator(r, d, rm)
