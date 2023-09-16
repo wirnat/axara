@@ -3,11 +3,11 @@ package reader
 import (
 	"bufio"
 	"fmt"
-	plural "github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	v1 "github.com/wirnat/axara/cmd/v1"
 	"github.com/wirnat/axara/cmd/v1/errors"
 	"github.com/wirnat/axara/cmd/v1/global"
+	"github.com/wirnat/axara/infrastructure/ztring"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -94,7 +94,7 @@ func (r readerFileTs) getMTFromTSFile(file *os.File, modelName string) (m *v1.Mo
 		Model:       modelName,
 		ModelSnake:  strcase.ToSnake(modelName),
 		ModelCamel:  strcase.ToLowerCamel(modelName),
-		ModelPlural: strings.ToLower(plural.NewClient().Plural(modelName)),
+		ModelPlural: strings.ToLower(ztring.Pluralize(modelName)),
 	}
 
 	scanner := bufio.NewScanner(file)
