@@ -17,10 +17,6 @@ func NewBranchUpdateUsecase(branchUpdate branch_repository.BranchUpdate, branchG
 }
 
 func (u branchUpdateUsecase) Update(ctx context.Context, param branch_request.BranchUpdate) (r model.Branch, err error) {
-    	     r.ID = param.ID
-    	     r.CompanyID = param.CompanyID
-    	     r.Name = param.Name
-    	    r.Description = &param.Description
 
     	err = u.branchUpdate.Update(ctx, &r,branch_request.BranchParam{UUID: &param.UUID})
     	if err!=nil{

@@ -102,12 +102,13 @@ func (r *ModelTrait) getEmbeddedModelField(modelName string, config Constructor)
 }
 
 func NewModelTraitFromFile(fl io.Reader, modelName string, config Constructor) *ModelTrait {
+
 	m := &ModelTrait{
 		Model:       modelName,
 		ModelSnake:  strcase.ToSnake(modelName),
 		ModelCamel:  strcase.ToLowerCamel(modelName),
-		ModelPlural: strings.ToLower(ztring.Pluralize(modelName)),
-		ModelHyp:    strings.ToLower(ztring.ConvertToHyphenated(modelName)),
+		ModelPlural: ztring.Pluralize(strcase.ToSnake(modelName)),
+		ModelHyp:    ztring.ConvertToHyphenated(strcase.ToSnake(modelName)),
 	}
 
 	m.getModelField(fl, config)
