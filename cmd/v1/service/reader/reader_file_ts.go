@@ -95,6 +95,7 @@ func (r readerFileTs) getMTFromTSFile(file *os.File, modelName string) (m *v1.Mo
 		ModelSnake:  strcase.ToSnake(modelName),
 		ModelCamel:  strcase.ToLowerCamel(modelName),
 		ModelPlural: strings.ToLower(ztring.Pluralize(modelName)),
+		ModelHyp:    strings.ToLower(ztring.ConvertToHyphenated(modelName)),
 	}
 
 	scanner := bufio.NewScanner(file)

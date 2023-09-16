@@ -19,6 +19,7 @@ type ModelTrait struct {
 	ModelSnake  string       `json:"model_snake"`
 	ModelCamel  string       `json:"model_camel"`
 	ModelPlural string       `json:"model_plural"`
+	ModelHyp    string       `json:"model_hyp"`
 	FileInfo    fs.FileInfo
 	ModelMeta   map[string]string
 }
