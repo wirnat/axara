@@ -26,6 +26,9 @@ func (a app) Generate() error {
 	case v1.Typescript:
 		modelReader = reader.NewReaderFileTs()
 		break
+	case v1.Dart:
+		modelReader = reader.NewReaderFileTs()
+		break
 	default:
 		modelReader = reader.NewModelFileReader()
 	}

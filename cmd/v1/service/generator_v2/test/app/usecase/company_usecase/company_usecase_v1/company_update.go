@@ -17,8 +17,6 @@ func NewCompanyUpdateUsecase(companyUpdate company_repository.CompanyUpdate, com
 }
 
 func (u companyUpdateUsecase) Update(ctx context.Context, param company_request.CompanyUpdate) (r model.Company, err error) {
-    	     r.ID = param.ID
-    	     r.Name = param.Name
 
     	err = u.companyUpdate.Update(ctx, &r,company_request.CompanyParam{UUID: &param.UUID})
     	if err!=nil{
