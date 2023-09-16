@@ -3,8 +3,8 @@ package v1
 import (
 	"bufio"
 	"fmt"
-	plural "github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
+	"github.com/wirnat/axara/infrastructure/ztring"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -106,7 +106,8 @@ func NewModelTraitFromFile(fl io.Reader, modelName string, config Constructor) *
 		Model:       modelName,
 		ModelSnake:  strcase.ToSnake(modelName),
 		ModelCamel:  strcase.ToLowerCamel(modelName),
-		ModelPlural: strings.ToLower(plural.NewClient().Plural(modelName)),
+		ModelPlural: strings.ToLower(ztring.Pluralize(modelName)),
+		ModelHyp:    strings.ToLower(ztring.ConvertToHyphenated(modelName)),
 	}
 
 	m.getModelField(fl, config)
