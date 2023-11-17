@@ -44,7 +44,7 @@ func (r *ModelTrait) getModelField(fl io.Reader, config Constructor) error {
 			}
 		}
 
-		if strings.Contains(scanner.Text(), "json") {
+		if strings.Contains(scanner.Text(), "json:") {
 			line := strings.Fields(scanner.Text())
 			isPtr := strings.Contains(line[1], "*")
 			mf := ModelField{

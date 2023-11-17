@@ -2,6 +2,7 @@ package reader
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/wirnat/axara/cmd/v1"
 	"github.com/wirnat/axara/cmd/v1/errors"
 	"github.com/wirnat/axara/cmd/v1/global"
@@ -37,6 +38,7 @@ func (g file) GetModelTrait(file fs.FileInfo, c v1.Constructor) (modelTrait *v1.
 		if executorModelFound {
 			initiator := strings.Fields(line)
 			if len(initiator) != 2 {
+				fmt.Println(initiator)
 				return nil, errors.InvalidModelFlag
 			}
 			modelName = initiator[1]
