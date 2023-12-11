@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/iancoleman/strcase"
+	log "github.com/sirupsen/logrus"
 	"github.com/wirnat/axara/infrastructure/ztring"
 	"io"
 	"io/fs"
@@ -58,7 +59,10 @@ func (r *ModelTrait) getModelField(fl io.Reader, config Constructor) error {
 				metf := strings.Fields(metas[1])
 				mf.Meta = map[string]interface{}{}
 				for _, m := range metf {
-					meta := strings.Split(m, ":")
+					meta := strings.Split(m, "->")
+					if len(meta) < 2 {
+						log.Fatalf("invalid meta in %v, example: validate->true", mf.Name)
+					}
 					mf.Meta[meta[0]] = meta[1]
 				}
 			}
